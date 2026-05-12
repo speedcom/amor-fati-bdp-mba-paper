@@ -16,3 +16,5 @@ paper/latex/*.run.xml
 paper/latex/*.toc
 paper/latex/*-blx.bib
 paper/main.*
+
+paper-project-plan.md
