@@ -1,28 +1,54 @@
 \section{Aneks replikacyjny}
 
-Eksperyment wykonano w lokalnym worktree repozytorium \amor{} na gałęzi \path{mba/basic-income-scenario}. Punktem odniesienia był produkcyjny baseline modelu, skalibrowany do snapshotu gospodarki Polski na dzień 2026-04-30. Zakres i status tej powierzchni baseline są udokumentowane w następujących artefaktach repozytorium:
+Eksperyment BDP jest rozdzielony na dwa poziomy repozytoriów. Silnik modelu znajduje się w repozytorium \amor{}. Niniejsza praca, dane Monte Carlo, skrypty generowania wykresów oraz patch scenariusza BDP znajdują się w osobnym repozytorium pracy \texttt{amor-fati-bdp-mba-paper}. Takie rozdzielenie ma ograniczyć mieszanie kontrfaktycznego eksperymentu MBA z bazowym modelem Polski.
+
+Punktem odniesienia dla patcha BDP jest commit z gałęzi \texttt{main} repozytorium \amor{}:
+
+\begin{verbatim}
+2d8b46e5064abef9d7a054317028843837b6e1c4
+\end{verbatim}
+
+Kontrfaktyczny mechanizm BDP jest zapisany jako patch:
+
+\begin{verbatim}
+patches/amor-fati-bdp-scenario.patch
+\end{verbatim}
+
+Patch został sprawdzony względem commita bazowego przez:
+
+\begin{verbatim}
+git apply --check patches/amor-fati-bdp-scenario.patch
+\end{verbatim}
+
+Punktem odniesienia merytorycznego był produkcyjny baseline modelu, skalibrowany do snapshotu gospodarki Polski na dzień 2026-04-30. Zakres i status tej powierzchni baseline są udokumentowane w następujących artefaktach repozytorium \amor{}:
 
 \begin{itemize}
     \item \path{docs/calibration-register.md} -- rejestr parametrów, jednostek, źródeł, transformacji i statusów kalibracji; wskazuje, że produkcyjne ustawienia baseline odnoszą się do snapshotu Polski z 2026-04-30.
     \item \path{docs/scenario-registry.md} -- rejestr scenariuszy; definiuje scenariusz baseline jako punkt odniesienia dla kontrfaktów oraz wskazuje jego źródło i datę jako produkcyjny baseline Polski 2026-04-30.
     \item \path{docs/empirical-validation-report.md} oraz \path{docs/empirical-validation/} -- raport i artefakty walidacyjne pokazujące, jak outputy modelu są porównywane z zewnętrznymi targetami empirycznymi.
-    \item \path{docs/mba-basic-income-sweep-plan.md} -- plan eksperymentu BDP; dokumentuje, że BDP jest scenariuszem polityki publicznej względem baseline, a nie elementem kalibracji stanu początkowego.
 \end{itemize}
 
-Scenariusz BDP uruchamiano przez standardowy plik JAR po wykonaniu \texttt{sbt assembly}. Każdy poziom BDP był odrębnym uruchomieniem w wariancie centralnym \(\lambda = 0{,}5\):
+Minimalna ścieżka odtworzenia eksperymentu jest następująca:
 
 \begin{verbatim}
+git clone https://github.com/boombustgroup/amor-fati.git
+cd amor-fati
+git checkout 2d8b46e5064abef9d7a054317028843837b6e1c4
+git apply ../amor-fati-bdp-mba-paper/patches/amor-fati-bdp-scenario.patch
 sbt assembly
-java -jar target/scala-3.8.2/amor-fati.jar 10 robust-bdp-0000 \
-  --duration 60 --run-id robust-bdp-0000-60m-10s --bdp 0
-java -jar target/scala-3.8.2/amor-fati.jar 10 robust-l050-bdp-0500 \
-  --duration 60 --run-id robust-l050-bdp-0500-60m-10s \
-  --bdp 500 --bdp-lambda 0.5
-...
-java -jar target/scala-3.8.2/amor-fati.jar 10 robust-l050-bdp-3000 \
-  --duration 60 --run-id robust-l050-bdp-3000-60m-10s \
-  --bdp 3000 --bdp-lambda 0.5
+../amor-fati-bdp-mba-paper/scripts/run-central-sweep.sh
+../amor-fati-bdp-mba-paper/scripts/run-lambda-sweep.sh
 \end{verbatim}
+
+Skrypt wariantu centralnego uruchamia poziomy \texttt{0}, \texttt{500}, \texttt{1000}, \texttt{1500}, \texttt{2000}, \texttt{2500} i \texttt{3000} PLN miesięcznie na agenta reprezentującego gospodarstwo domowe, dla 10 seedów i horyzontu 60 miesięcy. Domyślnie używa:
+
+\begin{verbatim}
+SEEDS=10
+MONTHS=60
+JAR=target/scala-3.8.2/amor-fati.jar
+\end{verbatim}
+
+Analiza odporności kanału płacy rezerwowej wykorzystuje te same założenia horyzontu i liczby seedów, ale uruchamia siatkę \(\lambda = 0\), \(0{,}25\), \(0{,}5\), \(0{,}75\) i \(1\). Wariant baseline \(\texttt{--bdp 0}\) jest wspólny dla siatki.
 
 Pliki wynikowe zapisano w katalogu \path{mc/}. Dla każdego poziomu powstało dziesięć plików seed CSV oraz agregaty \path{hh}, \path{banks} i \path{firms}. Przykładowy wzorzec nazwy pliku:
 
@@ -30,20 +56,26 @@ Pliki wynikowe zapisano w katalogu \path{mc/}. Dla każdego poziomu powstało dz
 mc/robust-l050-bdp-2000_robust-l050-bdp-2000-60m-10s_60m_seed001.csv
 \end{verbatim}
 
-Analizę odporności kanału płacy rezerwowej uruchomiono dla \(\lambda = 0\), \(0{,}25\), \(0{,}5\), \(0{,}75\) i \(1\), przy tym samym horyzoncie 60 miesięcy. Każda kombinacja \(\lambda\) i dodatniego poziomu BDP była osobnym uruchomieniem JAR-a, po 10 seedów:
-
-\begin{verbatim}
-java -jar target/scala-3.8.2/amor-fati.jar 10 robust-l075-bdp-2000 \
-  --duration 60 --run-id robust-l075-bdp-2000-60m-10s \
-  --bdp 2000 --bdp-lambda 0.75
-\end{verbatim}
-
 Agregację wyników, tabele terminalne i rysunki generują skrypty:
+
 \begin{verbatim}
 paper/analysis/figures_bdp_sweep.py
 paper/analysis/figures_lambda_robustness.py
 \end{verbatim}
 
-Skrypty zapisują tabele \path{paper/latex/data/bdp_sweep_terminal_summary.csv} i \path{paper/latex/data/bdp_lambda_robustness_terminal_summary.csv} oraz rysunki w katalogu \path{paper/latex/figures/}.
+Skrypty zapisują następujące artefakty:
 
-Wersja finalna pracy powinna uzupełnić niniejszy aneks o hash commita i dokładną wersję JAR.
+\begin{itemize}
+    \item \path{paper/latex/data/bdp_sweep_terminal_summary.csv},
+    \item \path{paper/latex/data/bdp_hh_terminal_summary.csv},
+    \item \path{paper/latex/data/bdp_transition_firm_panel.csv},
+    \item \path{paper/latex/data/bdp_lambda_robustness_terminal_summary.csv},
+    \item rysunki w katalogu \path{paper/latex/figures/}.
+\end{itemize}
+
+Pełny PDF można odtworzyć z repozytorium pracy poleceniem:
+
+\begin{verbatim}
+cd paper
+make paper
+\end{verbatim}

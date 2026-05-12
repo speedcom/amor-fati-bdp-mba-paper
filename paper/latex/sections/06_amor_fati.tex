@@ -2,11 +2,11 @@
 
 \subsection{Status narzędzia i własność intelektualna}
 
-\amor{} jest autorskim rozwiązaniem autora niniejszej pracy, rozwijanym w ramach \bbg{}, firmy należącej do autora. W pracy nie jest więc wykorzystywany anonimowy zewnętrzny symulator, lecz narzędzie badawcze zaprojektowane, zaimplementowane i utrzymywane przez autora jako projekt open-source. Repozytorium jest udostępnione publicznie, natomiast fakt otwartości kodu nie znosi autorstwa, odpowiedzialności za architekturę ani kontroli nad kierunkiem rozwoju modelu.
+\amor{} jest autorskim rozwiązaniem autora niniejszej pracy, rozwijanym w ramach \bbg{}, firmy należącej do autora. To oznacza, że status narzędzia wymaga jawnego ujawnienia: model nie jest anonimowym zewnętrznym symulatorem, lecz infrastrukturą badawczą zaprojektowaną, zaimplementowaną i utrzymywaną przez autora jako projekt open-source. Z tego powodu szczególnie ważne są replikowalność, jawny patch scenariusza BDP, dane Monte Carlo oraz możliwość krytyki założeń przez zewnętrznego czytelnika.
 
-Taka pozycja narzędzia ma znaczenie metodologiczne. Esej nie ogranicza się do interpretacji cudzych wyników ani do polemiki z modelem MFW. Proponuje wykonywalny sposób postawienia pytania kontrfaktycznego: co dzieje się z gospodarką polską, jeżeli do istniejącego modelu SFC-ABM zostanie dodany kanał BDP? W tym sensie wkładem pracy jest nie tylko teza ekonomiczna, lecz również infrastruktura eksperymentalna, którą można sklonować, uruchomić i poddać krytyce.
+Taka pozycja narzędzia ma znaczenie metodologiczne, ale nie powinna być traktowana jako argument z autorytetu. Przeciwnie: skoro autor pracy jest zarazem autorem modelu, ciężar dowodu musi przejść na jawność mechanizmu, powtarzalność uruchomień i wyraźne ograniczenia interpretacyjne. Pytanie badawcze brzmi więc: co dzieje się z gospodarką polską, jeżeli do istniejącego modelu SFC-ABM zostanie dodany kanał BDP, a następnie zostanie on uruchomiony jako kontrfaktyczny eksperyment względem baseline?
 
-\amor{} operacjonalizuje intuicję ekonomii złożoności: zamiast zakładać reprezentatywnego agenta i racjonalne oczekiwania, konstruuje gospodarkę od dołu, z heterogenicznych agentów podejmujących ograniczenie racjonalne decyzje. Hipoteza BDP nie jest więc w tej pracy wyłącznie argumentem narracyjnym. Zostaje zapisana w kodzie, uruchomiona jako kontrfaktyczny eksperyment i oceniona przez porównanie ścieżek modelu. W tym sensie model nie ilustruje eksperymentu. Model jest eksperymentem.
+\amor{} operacjonalizuje intuicję ekonomii złożoności: zamiast zakładać reprezentatywnego agenta i racjonalne oczekiwania, konstruuje gospodarkę od dołu, z heterogenicznych agentów podejmujących ograniczenie racjonalne decyzje \parencite{arthur2021}. Hipoteza BDP nie jest więc w tej pracy wyłącznie argumentem narracyjnym. Zostaje zapisana w kodzie, uruchomiona jako kontrfaktyczny eksperyment i oceniona przez porównanie ścieżek modelu.
 
 \subsection{Architektura i własności modelu}
 
