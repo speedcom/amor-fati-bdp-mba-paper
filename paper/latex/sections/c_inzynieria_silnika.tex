@@ -1,0 +1,76 @@
+\section{Inżynieria silnika \amor{}}
+\label{app:engineering}
+
+Ten aneks nie jest dodatkowym wynikiem ekonomicznym. Jego rola jest inna: pokazuje, jakiego rodzaju infrastruktura obliczeniowa stoi pod eksperymentem BDP. Ma to znaczenie dla oceny wiarygodności pracy, ponieważ wynik nie pochodzi z arkusza kalkulacyjnego ani z jednorazowego skryptu, lecz z produkcyjnego silnika SFC-ABM rozwijanego jako projekt open-source. W bieżącym checkout repozytorium \amor{} warstwa Scala obejmuje 384 pliki i około 62 tys. linii kodu w \path{src/main/scala} oraz \path{src/test/scala}; z tego około 34 tys. linii przypada na kod silnika, a około 29 tys. na testy. Liczby te nie są argumentem z objętości, lecz wskazują skalę artefaktu, którego zachowanie jest następnie ograniczane przez typy, ledger, testy i dokumentację walidacyjną.
+
+\subsection{Typy ekonomiczne i arytmetyka stałoprzecinkowa}
+
+Silnik nie operuje na bezpostaciowych liczbach zmiennoprzecinkowych. Podstawowe wielkości ekonomiczne są reprezentowane jako typy stałoprzecinkowe oparte na \texttt{Long} ze skalą \(10^4\). W kodzie występują m.in. typy \texttt{PLN}, \texttt{Rate}, \texttt{Share}, \texttt{Scalar}, \texttt{Multiplier}, \texttt{Coefficient}, \texttt{PriceIndex} i \texttt{ExchangeRate}. Są one zdefiniowane jako typy \texttt{opaque}, co oznacza, że kompilator Scali nie pozwala traktować ich jako tej samej liczby. Przykładowo dodanie kwoty pieniężnej do stopy procentowej nie jest błędem runtime, lecz błędem typów jeszcze przed uruchomieniem programu.
+
+Ten wybór projektowy ma dwa skutki. Po pierwsze, ogranicza klasę błędów jednostek, które w modelach makroekonomicznych są szczególnie trudne do wykrycia po fakcie. Po drugie, unika dryfu numerycznego typowego dla arytmetyki \texttt{Double}, który mógłby maskować lub generować pozorne naruszenia identyczności SFC. Tam, gdzie operacje mogą przekroczyć zakres, stosowane są jawne kontrakty arytmetyczne, np. \texttt{multiplyExact}, \texttt{addExact}, sprawdzane dzielenie i wersje z przejściem przez \texttt{BigInt} w ścieżkach wymagających ochrony przed przepełnieniem.
+
+\subsection{Ledger i formalna weryfikacja}
+
+\amor{} korzysta z osobnego modułu \ledger{}, utrzymywanego jako submoduł w \path{modules/ledger}. Ten moduł pełni funkcję jądra przepływów księgowych: agent lub mechanizm ekonomiczny może generować przepływ pieniężny, ale wykonanie przepływu przechodzi przez warstwę, której zadaniem jest utrzymanie zasady podwójnego zapisu.
+
+Ważne jest precyzyjne rozróżnienie poziomów zaufania. Formalnie weryfikowany jest model referencyjny w \path{src/main/scala-stainless/Verified.scala}, sprawdzany przez Stainless oraz solver Z3. Dokumentacja \path{modules/ledger/docs/verification.md} wskazuje następujące własności tego modelu:
+
+\begin{table}[htbp]
+\centering
+\scriptsize
+\begin{tabularx}{\textwidth}{@{}L{0.30\textwidth}X@{}}
+\toprule
+\textbf{Własność} & \textbf{Znaczenie dla eksperymentu SFC-ABM} \\
+\midrule
+Konserwacja przepływu & suma sald dwóch rachunków dotkniętych przepływem pozostaje niezmieniona po jego wykonaniu \\
+Warunek ramowy & rachunki nieuczestniczące w przepływie pozostają bez zmian \\
+Aplikacja sekwencyjna & lista przepływów zachowuje własności konserwacji przy iteracyjnym wykonaniu \\
+Dokładność dystrybucji & dystrybucja z resztą dokładnie sumuje się do kwoty źródłowej, bez utraty jednostek pieniężnych \\
+Komutatywność przepływów rozłącznych & przepływy dotyczące rozłącznych rachunków dają ten sam wynik niezależnie od kolejności \\
+Refinement runtime & model \texttt{Map[Int, Long]} jest powiązany z referencją \texttt{BigInt} pod jawnymi warunkami braku przepełnienia \\
+\bottomrule
+\end{tabularx}
+\caption{Wybrane własności referencyjnego modelu ledgerowego weryfikowane przez Stainless/Z3.}
+\label{tab:ledger-verification}
+\end{table}
+
+Produkcja nie jest w tekście przedstawiana jako w pełni formalnie udowodniona. To byłoby zbyt mocne twierdzenie. Produkcyjny interpreter, szybka ścieżka imperatywna i dystrybucja są testowane przeciwko współdzielonym modelom referencyjnym oraz kontraktom wykonania. Łańcuch zaufania wygląda zatem następująco: Stainless/Z3 dowodzi własności modelu referencyjnego; testy mostkują model referencyjny z czystym interpreterem produkcyjnym; testy równoważności porównują ścieżkę imperatywną z referencją; runtime wymusza kontrakty kształtu batchy, indeksów, nieujemnych przepływów i zakresów \texttt{Long}. Jest to celowo konserwatywna architektura: dowód formalny ma jasno określone granice, a wszystko poza nimi jest objęte testami i kontraktami.
+
+\subsection{Warstwa agentów i mechanizmy gospodarki}
+
+Warstwa agentowa \amor{} jest zapisana jako zbiór modułów z jawnym stanem i czystymi funkcjami przejścia. W katalogu \path{src/main/scala/com/boombustgroup/amorfati/agents} znajdują się m.in. moduły gospodarstw domowych, firm, sektora bankowego, NBP, ZUS/NFZ/PPK, JST, ubezpieczeń, NBFI, migracji, funduszy celowych, sektora quasi-fiskalnego oraz mechanizmów takich jak \texttt{EclStaging}, \texttt{DepositMobility} i \texttt{InterbankContagion}. Z punktu widzenia tej pracy ważne są zwłaszcza trzy elementy.
+
+Po pierwsze, firmy nie są jedną reprezentatywną firmą. Mają stan technologiczny, kapitał, zapasy, zatrudnienie, gotówkę, dług i powody bankructwa. W kodzie istnieje m.in. przyczyna \texttt{AiDebtTrap}, czyli przypadek, w którym presja inwestycyjna i finansowanie technologii mogą doprowadzić firmę do bariery bilansowej. Po drugie, sektor bankowy nie jest pojedynczym agregatem. Model operuje na sześciu archetypach banków komercyjnych oraz agregacie \texttt{Others}; banki mają kapitał, NPL, LCR/NSFR, staging ECL zgodny z logiką IFRS 9 oraz możliwość upadłości. Po trzecie, ryzyko systemowe nie jest dopisane wyłącznie jako spread. Mechanizmy \texttt{InterbankContagion} i \texttt{DepositMobility} modelują straty kontrahentów, hoarding płynności oraz przepływ depozytów między bankami.
+
+Ta architektura jest ważna dla interpretacji BDP. Jeżeli transfer zmienia płacę rezerwową, popyt, deficyt, koszt kapitału i kurs walutowy, to odpowiedź firm nie jest jedną funkcją agregatową. Jest wynikiem lokalnych decyzji, ograniczeń bilansowych, dostępu do finansowania i stanu technologicznego. Dzięki temu wynik nieliniowy nie musi być założony z góry. Może wyłonić się z interakcji kanałów.
+
+\subsection{Powierzchnie walidacji i prowencja kalibracji}
+
+\amor{} rozdziela co najmniej trzy powierzchnie kontroli. Pierwsza to walidacja księgowa: czy przepływy i zasoby zachowują identyczności SFC. Druga to artefakty macierzy SFC: Balance Sheet Matrix, Transactions Flow Matrix, stock-flow reconciliation oraz mapping z wierszy symbolicznych do mechanizmów runtime. Trzecia to walidacja empiryczna i kalibracyjna: czy wartości startowe, parametry i ścieżki modelu mają jawne źródła, statusy i ograniczenia.
+
+Rejestr kalibracji \path{docs/calibration-register.md} jest generowany z typowanego rejestru prowencji. Nie jest listą luźnych przypisów, lecz tabelą parametrów z wartością, jednostką, właścicielem implementacyjnym, źródłem, transformacją i statusem. W bieżącej wersji rejestr wskazuje następujące liczby statusów:
+
+\begin{table}[htbp]
+\centering
+\scriptsize
+\begin{tabular}{@{}lr@{}}
+\toprule
+\textbf{Status prowencji} & \textbf{Liczba parametrów} \\
+\midrule
+\texttt{EMPIRICAL} & 36 \\
+\texttt{EMPIRICAL\_TRANSFORMED} & 17 \\
+\texttt{CODE\_NOTE\_EMPIRICAL} & 61 \\
+\texttt{ASSUMED} & 31 \\
+\texttt{TUNED\_NEEDS\_VALIDATION} & 85 \\
+\texttt{POLICY\_SCENARIO} & 7 \\
+\texttt{PLACEHOLDER} & 1 \\
+\texttt{UNKNOWN\_SOURCE} & 0 \\
+\bottomrule
+\end{tabular}
+\caption{Statusy prowencji kalibracji w produkcyjnym baseline \amor{} według rejestru kalibracji.}
+\label{tab:calibration-provenance}
+\end{table}
+
+Takie oznaczenia są istotne metodologicznie. Model nie ukrywa, które parametry są empiryczne, które są transformacją danych instytucjonalnych, które są założeniem strukturalnym, a które są współczynnikami dostrojonymi i wymagającymi dalszej walidacji. To wzmacnia falsyfikowalność eksperymentu BDP: zewnętrzny badacz może nie tylko powtórzyć seedy, ale także wskazać, które parametry powinny być przedmiotem alternatywnej kalibracji lub analizy wrażliwości.
+
+W tym sensie \amor{} jest nie tylko modelem ekonomicznym, ale także infrastrukturą replikowalnego sporu o mechanizmy. Twierdzenie „BDP jest warunkowym katalizatorem automatyzacji” nie jest zakończeniem analizy. Jest wynikiem jednego jawnego patcha, jednej jawnej siatki parametrów i jednego zestawu seedów na tle większego silnika, który można sklonować, zmodyfikować i uruchomić ponownie.
