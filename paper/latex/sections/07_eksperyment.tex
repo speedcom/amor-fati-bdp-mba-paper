@@ -1,0 +1,39 @@
+\section{Eksperyment kontrfaktyczny BDP}
+
+Scenariusz BDP został zaimplementowany jako parametr produkcyjnego pliku JAR, a nie jako osobny tryb raportowy. Jest to istotne, ponieważ wynik pochodzi z tej samej ścieżki wykonania, którą standardowo uruchamia się model Monte Carlo. Parametr \texttt{--bdp <pln>} przekazuje miesięczną wartość transferu do konfiguracji fiskalnej modelu.
+
+Zakres implementacji obejmuje trzy elementy. Po pierwsze, do \texttt{FiscalConfig} dodano \texttt{basicIncomeMonthly}, domyślnie równe zero, aby baseline pozostał niezmieniony. Po drugie, dodano \texttt{basicIncomeReservationWagePassThrough}, również domyślnie zero. Po trzecie, transfer rząd-gospodarstwa przechodzi istniejącą ścieżką \texttt{GovSocialTransfer}, dzięki czemu jest widoczny w wydatkach społecznych, deficycie, długu, popycie, inflacji i walidacji SFC.
+
+Formuła transferu gospodarstwa domowego ma postać:
+\begin{equation}
+  Transfer_h = Children_h \cdot 800 + BDP.
+\end{equation}
+Kanał płacy rezerwowej zapisano jako:
+\begin{equation}
+  ReservationWage = MinWage + \lambda \cdot BDP.
+\end{equation}
+W wariancie centralnym przyjęto \(\lambda = 0{,}5\). Jest to założenie behawioralne: gospodarstwo domowe otrzymuje pełny BDP, ale tylko część transferu podnosi jego płacę rezerwową. Dla \texttt{--bdp 0} model pozostaje baseline'em. Analiza odporności wykorzystuje parametr \texttt{--bdp-lambda <0..1>}, dzięki czemu siłę kanału płacy rezerwowej można zmieniać bez wprowadzania osobnego entrypointu lub alternatywnej ścieżki raportowej.
+
+Eksperyment objął poziomy \texttt{0}, \texttt{500}, \texttt{1000}, \texttt{1500}, \texttt{2000}, \texttt{2500} i \texttt{3000} PLN miesięcznie na agenta reprezentującego gospodarstwo domowe. Horyzont wynosił 60 miesięcy, a każdy poziom uruchomiono dla 10 seedów. Standardowa komenda wariantu centralnego miała postać:
+\begin{verbatim}
+java -jar target/scala-3.8.2/amor-fati.jar 10 robust-l050-bdp-XXXX \
+  --duration 60 --run-id robust-l050-bdp-XXXX-60m-10s \
+  --bdp XXXX --bdp-lambda 0.5
+\end{verbatim}
+
+Warianty odpornościowe dla kanału płacy rezerwowej mają tę samą strukturę uruchomienia, lecz zmieniają jawny parametr \(\lambda\):
+\begin{verbatim}
+java -jar target/scala-3.8.2/amor-fati.jar 10 robust-l075-bdp-2000 \
+  --duration 60 --run-id robust-l075-bdp-2000-60m-10s \
+  --bdp 2000 --bdp-lambda 0.75
+\end{verbatim}
+
+Jednostka transferu wymaga doprecyzowania. Poziom \texttt{--bdp 2000} nie oznacza literalnie 2000 PLN miesięcznie na każdego mieszkańca Polski. Oznacza miesięczny transfer na agenta reprezentującego gospodarstwo domowe w skalowanej populacji modelu. Dlatego przeliczenie na język decydenta publicznego powinno wykorzystywać dodatkowy miesięczny \texttt{SocialTransferSpend} względem baseline, podzielony przez populację referencyjną 38 mln osób, a nie proste dzielenie liczby mieszkańców przez liczbę agentów.
+
+Pełny schemat wynikowy modelu jest znacznie szerszy niż zakres tej pracy i ma charakter techniczny: służy replikacji uruchomień Monte Carlo, a nie jako tekst ekonomiczny. Dlatego w analizie raportuję tylko wskaźniki, które bezpośrednio odpowiadają kanałom transmisji hipotezy.
+
+Panel makroekonomiczny obejmuje aktywność, inflację, stopę referencyjną, saldo sektora finansów publicznych i dług publiczny. Panel fiskalny mierzy skalę transferu oraz jego konsekwencje dla deficytu i długu. Panel kosztu kapitału łączy stopę NBP z rentownością długu publicznego i kosztem finansowania korporacyjnego. Panel zewnętrzny pokazuje kurs PLN/EUR i rachunek bieżący. Panel firmowy obejmuje adopcję AI/hybrid, inwestycje prywatne i demografię firm. Panel gospodarstw domowych obejmuje dochód, konsumpcję, bezrobocie i agregaty rozkładowe. Panel bankowy obejmuje jakość portfela kredytowego, adekwatność kapitałową, płynność i upadłości banków.
+
+\input{tables/transmission_channels}
+
+Wyniki prezentuję więc jako tabele syntetyczne i wykresy kanałów transmisji, natomiast pełne nazwy kolumn pozostają częścią artefaktów replikacyjnych modelu.

@@ -1,0 +1,106 @@
+\section{Wyniki eksperymentu i kanały transmisji}
+
+\input{tables/per_capita_equivalents}
+
+\input{tables/terminal_results}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig01_bdp_adoption_investment.png}
+  \caption{BDP, adopcja AI/hybrid i inwestycje prywatne. Punkty pokazują średnie terminalne po 10 seedach, a pionowe odcinki odchylenie standardowe między seedami.}
+  \label{fig:bdp-adoption-investment}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig02_bdp_fiscal_stress.png}
+  \caption{Kanał fiskalno-dłużny: dług/PKB, deficyt/PKB oraz miesięczne transfery społeczne.}
+  \label{fig:bdp-fiscal-stress}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig03_bdp_cost_of_capital.png}
+  \caption{Kanał inflacyjno-monetarny i koszt kapitału: inflacja, stopa NBP, rentowność długu publicznego i koszt długu korporacyjnego.}
+  \label{fig:bdp-cost-capital}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig04_bdp_external_channel.png}
+  \caption{Kanał zewnętrzny: rachunek bieżący do PKB oraz kurs PLN/EUR.}
+  \label{fig:bdp-external-channel}
+\end{figure}
+
+Wynik wariantu centralnego jest nieliniowy. Jak pokazuje rysunek~\ref{fig:bdp-adoption-investment}, adopcja AI/hybrid rośnie od 8,97\% w baseline do 10,19\% przy \texttt{--bdp 2000}. Przy \texttt{--bdp 2500} spada do 8,42\%, a przy \texttt{--bdp 3000} do 8,20\%. Oznacza to, że mocna teza \textit{im wyższy BDP, tym większa automatyzacja} nie znajduje potwierdzenia.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig05_lambda_robustness.png}
+  \caption{Analiza odporności kanału płacy rezerwowej. Linie pokazują średnią terminalną adopcję AI/hybrid po 10 seedach dla pięciu wartości \(\lambda\).}
+  \label{fig:lambda-robustness}
+\end{figure}
+
+\subsection{Odporność parametru lambda}
+
+Analiza odporności pokazuje, że wynik nie jest czysto mechanicznym skutkiem samego transferu. Przy \(\lambda = 0\), czyli przy braku przełożenia BDP na płacę rezerwową, adopcja AI/hybrid pozostaje blisko baseline i nie tworzy wyraźnej krzywej akceleracji. Przy \(\lambda = 0{,}25\) adopcja rośnie łagodnie wraz z BDP, ale nie pojawia się gwałtowny próg. Oznacza to, że sam kanał popytowo-fiskalny nie wystarcza do mocnej wersji hipotezy.
+
+Najbardziej informacyjny jest wariant centralny \(\lambda = 0{,}5\). Pokazuje on przedział katalityczny: adopcja rośnie z 8,97\% w baseline do 10,19\% przy \texttt{--bdp 2000}, a następnie spada do 8,42\% przy \texttt{--bdp 2500} i 8,20\% przy \texttt{--bdp 3000}. Warianty \(\lambda = 0{,}75\) i \(\lambda = 1\) przesuwają próg w lewo: lokalny szczyt pojawia się już przy \texttt{--bdp 1000}, a wyższe poziomy transferu obniżają inwestycje prywatne i adopcję.
+
+Wniosek z analizy odporności jest jednoznaczny: BDP może być katalizatorem automatyzacji tylko w przedziale pośrednim. Jeśli transfer nie wpływa na płacę rezerwową, presja automatyzacyjna jest słaba. Jeśli wpływa zbyt mocno, kanał kosztu pracy, inwestycji i finansowania zaczyna dławić zdolność firm do ucieczki technologicznej. Hipoteza ma więc charakter warunkowy, a nie monotoniczny.
+
+\subsection{Ścieżka przejścia sektora firm}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig06_firm_transition_panel.png}
+  \caption{Ścieżki miesięczne sektora firm dla wybranych poziomów BDP. Linie pokazują średnie po 10 seedach dla baseline, dolnej kotwicy \texttt{--bdp 500}, wariantu lokalnego szczytu adopcji \texttt{--bdp 2000} oraz wysokiego impulsu \texttt{--bdp 3000}.}
+  \label{fig:firm-transition-panel}
+\end{figure}
+
+Rysunek~\ref{fig:firm-transition-panel} pokazuje, co dzieje się pod punktem terminalnym. W wariancie \texttt{--bdp 2000} adopcja AI/hybrid rośnie silniej niż w baseline, ale dzieje się to przy wyraźnie słabszej ścieżce inwestycji prywatnych/PKB. Wysoki wariant \texttt{--bdp 3000} pokazuje, że większa liczba firm nie oznacza automatycznie większej automatyzacji. Liczba żyjących firm rośnie, ale inwestycje prywatne/PKB pozostają nisko, a adopcja AI/hybrid jest słabsza niż przy \texttt{--bdp 2000}.
+
+Nie jest to wyłącznie efekt wyższego mianownika PKB. W danych terminalnych spada także nominalny strumień prywatnych inwestycji brutto: z około 44,3 mld PLN miesięcznie w baseline do około 37,5 mld PLN przy \texttt{--bdp 2000} i 33,9 mld PLN przy \texttt{--bdp 3000}. W modelu inwestycja firmy jest ograniczana gotówką oraz możliwością pozyskania finansowania zewnętrznego. Wysoki BDP zwiększa deficyt i dług publiczny, podnosi rentowności obligacji publicznych oraz koszt długu korporacyjnego, a równocześnie przez kanał płacy rezerwowej i kursu walutowego pogarsza część kosztów firm. Presja automatyzacyjna rośnie, ale firmy mają mniej przestrzeni bilansowej, aby tę reakcję sfinansować. Ograniczeniem nie jest więc sama liczba podmiotów gospodarczych, lecz zdolność firm do finansowania inwestycji technologicznych.
+
+\subsection{Płaca rezerwowa}
+
+Kanał płacy rezerwowej jest aktywny mechanicznie: przy \(\lambda = 0{,}5\) scenariusz \texttt{--bdp 2000} podnosi płacę rezerwową o 1000 PLN. Nie przekłada się to jednak natychmiast na silny wzrost płacy rynkowej. \texttt{MarketWage} pozostaje blisko baseline do poziomu \texttt{--bdp 1500}, a wyraźniej rośnie dopiero przy \texttt{--bdp 2500} i \texttt{--bdp 3000}. Sam kanał płacy rezerwowej nie tłumaczy więc wzrostu adopcji AI/hybrid do \texttt{--bdp 2000}.
+
+\subsection{Popyt}
+
+Transfer zwiększa dochód gospodarstw domowych, ale mediana konsumpcji i PKB reagują słabiej. Przy \texttt{--bdp 2000} średni dochód gospodarstw rośnie względem baseline o około 2,1 tys. PLN, natomiast mediana konsumpcji tylko o około 190 PLN. Część impulsu trafia zatem do oszczędności, importu i bilansów, a nie wyłącznie do krajowego popytu finalnego.
+
+\subsection{Panel kontrolny gospodarstw domowych}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig07_hh_control_panel.png}
+  \caption{Panel kontrolny gospodarstw domowych. Punkty pokazują średnie terminalne po 10 seedach, a pionowe odcinki odchylenie standardowe między seedami.}
+  \label{fig:hh-control-panel}
+\end{figure}
+
+Rysunek~\ref{fig:hh-control-panel} pełni funkcję kontroli alternatywnego wyjaśnienia. Gdyby nieliniowość adopcji AI/hybrid wynikała głównie z załamania sytuacji gospodarstw domowych, należałoby oczekiwać wyraźnej zmiany ubóstwa, nierówności albo bankructw gospodarstw. W obecnym eksperymencie takiego sygnału nie widać. Średni dochód gospodarstw i mediana oszczędności rosną wraz z BDP, mediana konsumpcji rośnie umiarkowanie, a wskaźniki dystrybucyjne pozostają stabilne. Gini dochodowy pozostaje w przedziale około 0,28--0,29, stopa ubóstwa relatywnego 50\% mediany pozostaje blisko 13,5--14,3\%, a bankructwa gospodarstw domowych nie występują w wariancie centralnym.
+
+Ten panel zawęża interpretację wyniku. BDP poprawia płynność gospodarstw domowych, ale nie generuje w horyzoncie 60 miesięcy silnego szoku dystrybucyjnego, który sam tłumaczyłby próg automatyzacji. Nieliniowość adopcji należy więc wiązać przede wszystkim z kanałem firmowym i fiskalno-finansowym: kosztem kapitału, inwestycjami prywatnymi oraz zdolnością firm do sfinansowania reakcji technologicznej.
+
+\subsection{Inflacja i koszt kapitału}
+
+Inflacja i stopa referencyjna NBP rosną umiarkowanie. Silniejszy sygnał pojawia się w koszcie finansowania rynkowego: rentowność obligacji i koszt długu korporacyjnego rosną wraz z poziomem BDP. To przesuwa interpretację z prostego kanału stopy NBP na szerszy kanał kosztu kapitału, obejmujący dług publiczny, obligacje korporacyjne i finansowanie inwestycji.
+
+\subsection{Fiskus i dług}
+
+Kanał fiskalno-dłużny jest najsilniejszy i monotoniczny. Dług/PKB rośnie z 69,34\% w baseline do 97,12\% przy \texttt{--bdp 2000} i 106,73\% przy \texttt{--bdp 3000}. Deficyt/PKB rośnie z 7,69\% do odpowiednio 14,20\% i 16,55\%. Przy wysokich poziomach transferu kanał fiskalno-dłużny zaczyna dominować nad pozytywnym kanałem popytowym.
+
+\subsection{Sektor zewnętrzny}
+
+PLN słabnie, import rośnie, a rachunek bieżący pogarsza się. Przy \texttt{--bdp 3000} kurs PLN/EUR jest o około 3,2\% wyższy niż w baseline, import o około 6,5\% wyższy, a rachunek bieżący spada z -10,21\% do -13,31\% PKB. Część impulsu popytowego odpływa więc przez import i kanał kursowy.
+
+\subsection{Kredyt i banki}
+
+W eksperymencie nie widać kryzysu bankowego. Nie występują upadłości banków, wskaźniki CAR/LCR/NSFR pozostają wysokie, a NPL nie rosną monotonicznie. Ograniczenie automatyzacji przy wysokim BDP nie wynika z załamania sektora bankowego, lecz raczej z pogorszenia opłacalności i zdolności finansowania inwestycji prywatnych.
+
+\subsection{Automatyzacja i inwestycje}
+
+Adopcja AI/hybrid rośnie do \texttt{--bdp 2000}, ale równolegle prywatne inwestycje/PKB spadają z 9,90\% w baseline do 8,38\%. Przy \texttt{--bdp 2500} i \texttt{--bdp 3000} inwestycje prywatne/PKB spadają do około 7,4\%, a adopcja AI/hybrid obniża się poniżej baseline. To wskazuje na próg absorpcji: firmy mogą reagować automatyzacją tylko tak długo, jak mają zdolność finansowania tej reakcji.
+
+W konsekwencji eksperyment wspiera wersję warunkową hipotezy. BDP może przyspieszać automatyzację w przedziale, w którym presja kosztowa i popytowa nie niszczą zdolności inwestycyjnej sektora prywatnego. Po przekroczeniu progu fiskalno-finansowego gospodarka nie przechodzi do szybszej automatyzacji, lecz do niższej dynamiki inwestycji prywatnych, pogorszenia bilansu zewnętrznego i silniejszego obciążenia długu publicznego.

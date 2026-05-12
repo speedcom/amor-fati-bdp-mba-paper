@@ -1,0 +1,75 @@
+\section{Ograniczenia, falsyfikacja i dalsza praca}
+
+Wynik tej pracy należy interpretować jako kontrfaktyczny eksperyment obliczeniowy, a nie punktową prognozę makroekonomiczną dla Polski. \amor{} jest modelem gospodarki skalibrowanym do określonego punktu startowego i pozwala badać ścieżki alternatywne względem baseline. Nie mówi, że Polska po wprowadzeniu BDP z pewnością osiągnęłaby dokładnie takie wartości długu, inflacji, kursu albo adopcji AI/hybrid. Mówi coś węższego, ale ważnego: przy zadanym mechanizmie BDP, zadanych regułach zachowań i zadanym wariancie finansowania pojawia się nieliniowa ścieżka, w której kanał fiskalno-finansowy ogranicza zdolność firm do automatyzacji po przekroczeniu wyższego poziomu transferu.
+
+To rozróżnienie jest kluczowe. Praca nie jest prognozą typu \textit{co stanie się z Polską}. Jest analizą typu \textit{jaki mechanizm może się uruchomić, jeżeli określony impuls fiskalno-dochodowy zostanie wprowadzony do gospodarki o danych ograniczeniach finansowych}. Siła tego podejścia polega na możliwości testowania hipotez, a nie na udawaniu precyzji prognostycznej.
+
+\subsection{Status twierdzeń empirycznych w eksperymencie}
+
+Tabela~\ref{tab:claim-status} porządkuje, co eksperyment wspiera, czego nie wspiera i czego nie rozstrzyga. Jest to istotne, ponieważ centralny wynik nie jest prostym potwierdzeniem intuicji autora. Model odrzuca wersję monotoniczną hipotezy i wspiera wersję warunkową.
+
+\begin{table}[htbp]
+\centering
+\scriptsize
+\caption{Status głównych twierdzeń po eksperymencie BDP}
+\label{tab:claim-status}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.34\textwidth}>{\raggedright\arraybackslash}p{0.18\textwidth}>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Twierdzenie} & \textbf{Status} & \textbf{Uzasadnienie w wynikach} \\
+\midrule
+BDP zwiększa automatyzację monotonicznie: im wyższy transfer, tym większa adopcja AI/hybrid. &
+Odrzucone &
+Adopcja rośnie do okolic \texttt{--bdp 2000}, po czym spada przy \texttt{--bdp 2500} i \texttt{--bdp 3000}. Wynik nie jest zgodny z prostą krzywą \textit{więcej BDP, więcej automatyzacji}. \\
+\addlinespace
+BDP może działać jako warunkowy katalizator automatyzacji. &
+Wspierane &
+W wariancie centralnym istnieje przedział, w którym adopcja AI/hybrid jest wyższa niż w baseline. Efekt zanika po przekroczeniu progu fiskalno-finansowego. \\
+\addlinespace
+Kanał płacy rezerwowej samodzielnie tłumaczy wynik. &
+Niewspierane &
+Analiza odporności parametru \(\lambda\) pokazuje, że przełożenie BDP na płacę rezerwową jest ważne, ale samo nie wyjaśnia lokalnego maksimum adopcji. \\
+\addlinespace
+Nieliniowość wyniku wynika z załamania gospodarstw domowych. &
+Niewspierane &
+Panel HH pokazuje stabilne metryki dystrybucyjne, brak bankructw gospodarstw i poprawę płynności gospodarstw wraz z BDP. \\
+\addlinespace
+Kanał fiskalno-finansowy ogranicza zdolność firm do finansowania CapEx. &
+Wspierane &
+Wraz z wysokim BDP rosną dług/PKB, deficyt/PKB, koszt długu publicznego i koszt długu korporacyjnego, a inwestycje prywatne/PKB oraz nominalny strumień inwestycji prywatnych spadają. \\
+\addlinespace
+Eksperyment dowodzi, że realna Polska po BDP osiągnęłaby dokładnie takie wartości makroekonomiczne. &
+Odrzucone &
+Model służy analizie kontrfaktycznej ścieżki i mechanizmów transmisji. Nie jest punktową prognozą makroekonomiczną ani administracyjną mikrosymulacją programu BDP. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Ograniczenia polityki BDP}
+
+Pierwsze ograniczenie dotyczy jednostki transferu. Model obejmuje 100 000 agentów reprezentujących gospodarstwa domowe, a nie pełną populację 38 mln osób. Nie zawiera pełnej struktury demograficznej per osoba, per dorosły i per dziecko. Dlatego scenariusz BDP należy interpretować jako skalowany impuls fiskalno-dochodowy dla reprezentatywnego agenta gospodarstwa domowego, a nie jako kompletną mikrosymulację administracyjnego programu transferowego.
+
+Drugie ograniczenie dotyczy finansowania. Obecny wariant jest w praktyce wariantem deficytowym. Nie modeluje alternatywnych ścieżek finansowania, takich jak wzrost VAT, wzrost PIT, składka od dochodu, cięcia wydatków, podatek majątkowy albo podatek od nadzwyczajnych zysków. To istotne, ponieważ struktura finansowania może całkowicie zmienić kanały transmisji. BDP finansowany deficytem przede wszystkim testuje odporność gospodarki na wzrost długu i kosztu kapitału. BDP finansowany podatkami przesunąłby ciężar analizy na podaż pracy, konsumpcję, inwestycje, redystrybucję i zachowania firm w inny sposób.
+
+Trzecie ograniczenie dotyczy porównania z raportem MFW. Raport MFW analizuje konkretne warianty redystrybucyjne i dla Polski opiera się na danych z 2013 r. Niniejsza praca nie replikuje tamtej analizy fiskalnej jeden do jednego. Wykorzystuje MFW jako punkt odniesienia metodologiczny i skaluje pytanie do obecnego modelu gospodarki polskiej. Most między MFW i \amor{} polega więc na zestawieniu pytań badawczych: redystrybucja i dobrobyt w równowadze kontra ścieżka przejścia, inwestycje i bilanse firm.
+
+\subsection{Ograniczenia modelu i eksperymentu}
+
+Pierwsze ograniczenie modelowe dotyczy parametru \(\lambda\). Analiza odporności obejmuje wartości \(\lambda = 0\), \(0{,}25\), \(0{,}5\), \(0{,}75\) i \(1\), ale jest to nadal tylko jeden wymiar behawioralny. Nie testuje jednocześnie alternatywnych reguł podaży pracy, różnic demograficznych, zróżnicowanej reakcji gospodarstw o różnej strukturze dochodu ani zmiany preferencji między pracą, czasem wolnym i konsumpcją.
+
+Drugie ograniczenie dotyczy automatyzacji. Model mierzy adopcję AI/hybrid w strukturze sektorowej, ale nie rozstrzyga jakości technologii, opóźnień wdrożeniowych, organizacyjnego learning curve ani różnic między automatyzacją procesową, robotyzacją, systemami predykcyjnymi i generatywną AI. Wyniki należy traktować jako analizę kanałów makro-finansowych wpływających na zdolność automatyzacji, a nie szczegółową prognozę konkretnych technologii.
+
+Trzecie ograniczenie dotyczy sektora publicznego. Model zawiera reguły fiskalne i monetarne, ale nie opisuje procesu politycznego, wiarygodności rządu, reakcji wyborców, zmiany premii za ryzyko wynikającej z oczekiwań politycznych ani możliwości korekty programu BDP w trakcie jego działania. W realnej gospodarce te elementy mogłyby wzmacniać albo osłabiać kanał długu publicznego.
+
+Czwarte ograniczenie dotyczy zachowań firm. Firmy w \amor{} reagują na koszty, popyt, finansowanie i ograniczenia bilansowe, ale model nie opisuje pełnej strategii konkurencyjnej, jakości zarządzania, przewag organizacyjnych, zdolności wdrożeniowej ani różnic w kulturze innowacji. Dwie firmy z identycznym kosztem kapitału mogą w praktyce podjąć różne decyzje technologiczne, jeśli różnią się kompetencjami operacyjnymi.
+
+Piąte ograniczenie dotyczy liczby seedów i horyzontu. Eksperyment centralny wykorzystuje 10 seedów na poziom BDP i horyzont 60 miesięcy. Jest to wystarczające do analizy mechanizmu i porównania kontrfaktycznych ścieżek w pracy MBA, ale nie zastępuje dużego programu badawczego obejmującego dziesiątki wariantów finansowania, parametrów behawioralnych i szoków zewnętrznych.
+
+\subsection{Dalsza praca}
+
+Najważniejszy kierunek dalszej pracy to warianty finansowania BDP. Obecny wynik mówi przede wszystkim o deficytowym impulsie fiskalno-dochodowym. Kolejne eksperymenty powinny porównać finansowanie przez VAT, PIT, składkę od dochodu, podatki majątkowe, cięcia wydatków oraz warianty mieszane. Dopiero taki zestaw pozwoliłby rozdzielić efekt samego transferu od efektu sposobu jego finansowania.
+
+Drugi kierunek to pełniejsza heterogeniczność gospodarstw domowych. W szczególności warto rozróżnić transfer per osoba, per dorosły, per dziecko i per gospodarstwo domowe, a także przetestować reakcję podaży pracy według wieku, typu gospodarstwa i pozycji dochodowej. To umożliwiłoby bliższe przejście od impulsu modelowego do administracyjnego projektu polityki publicznej.
+
+Trzeci kierunek to bardziej szczegółowa technologia automatyzacji. Obecna miara AI/hybrid jest użyteczna do badania kanałów makro-finansowych, ale nie rozstrzyga, czy firma wdraża robotyzację produkcji, automatyzację back-office, systemy predykcyjne czy generatywną AI. Rozdzielenie tych technologii pozwoliłoby lepiej połączyć model z decyzjami inwestycyjnymi firm.
+
+Czwarty kierunek to replikacja i audyt zewnętrzny. Ponieważ \amor{} jest repozytorium open-source, scenariusz BDP można powtórzyć, zmodyfikować i porównać z alternatywnymi mechanizmami. To ważne nie tylko technicznie, ale także metodologicznie: model powinien być traktowany jako narzędzie do sporu o mechanizmy, a nie jako zamknięte źródło ostatecznych odpowiedzi.

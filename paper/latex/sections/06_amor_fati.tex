@@ -1,0 +1,57 @@
+\section{\amor{} jako instrument badawczy}
+
+\subsection{Status narzędzia i własność intelektualna}
+
+\amor{} jest autorskim rozwiązaniem autora niniejszej pracy, rozwijanym w ramach \bbg{}, firmy należącej do autora. W pracy nie jest więc wykorzystywany anonimowy zewnętrzny symulator, lecz narzędzie badawcze zaprojektowane, zaimplementowane i utrzymywane przez autora jako projekt open-source. Repozytorium jest udostępnione publicznie, natomiast fakt otwartości kodu nie znosi autorstwa, odpowiedzialności za architekturę ani kontroli nad kierunkiem rozwoju modelu.
+
+Taka pozycja narzędzia ma znaczenie metodologiczne. Esej nie ogranicza się do interpretacji cudzych wyników ani do polemiki z modelem MFW. Proponuje wykonywalny sposób postawienia pytania kontrfaktycznego: co dzieje się z gospodarką polską, jeżeli do istniejącego modelu SFC-ABM zostanie dodany kanał BDP? W tym sensie wkładem pracy jest nie tylko teza ekonomiczna, lecz również infrastruktura eksperymentalna, którą można sklonować, uruchomić i poddać krytyce.
+
+\amor{} operacjonalizuje intuicję ekonomii złożoności: zamiast zakładać reprezentatywnego agenta i racjonalne oczekiwania, konstruuje gospodarkę od dołu, z heterogenicznych agentów podejmujących ograniczenie racjonalne decyzje. Hipoteza BDP nie jest więc w tej pracy wyłącznie argumentem narracyjnym. Zostaje zapisana w kodzie, uruchomiona jako kontrfaktyczny eksperyment i oceniona przez porównanie ścieżek modelu. W tym sensie model nie ilustruje eksperymentu. Model jest eksperymentem.
+
+\subsection{Architektura i własności modelu}
+
+\amor{} jest wykonywalnym modelem SFC-ABM gospodarki polskiej. Model obejmuje 10 000 heterogenicznych firm w sześciu sektorach, 100 000 agentów reprezentujących gospodarstwa domowe, siedem wierszy sektora bankowego, bank centralny, sektor publiczny oraz sektor zewnętrzny z dynamicznym kursem PLN/EUR. Siedem wierszy bankowych nie oznacza siedmiu równorzędnych banków komercyjnych: implementacja obejmuje sześć wyróżnionych archetypów bankowych (PKO BP, Pekao, mBank, ING BSK, Santander, BPS/Coop) oraz agregat \texttt{Others} reprezentujący pozostałą część sektora. Decyzje są podejmowane miesięcznie.
+
+Punktem wyjścia eksperymentu jest produkcyjny baseline \amor{}, skalibrowany do stanu gospodarki Polski na dzień 2026-04-30. Praca nie kalibruje modelu od nowa, lecz wykorzystuje ten punkt startowy do przeprowadzenia kontrfaktycznych scenariuszy BDP.\footnote{Dokumentacja tej powierzchni kalibracyjnej znajduje się w rejestrze kalibracji i rejestrze scenariuszy repozytorium \amor{}.}
+
+Liczba agentów nie jest próbą dosłownego odtworzenia 38-milionowej populacji Polski. Model wykorzystuje agentów jako skalowaną reprezentację heterogenicznych decyzji ekonomicznych. Agregaty makroekonomiczne są mapowane do skali polskiej gospodarki przez mechanizmy kalibracyjne, w szczególności przez \texttt{gdpRatio}, który wiąże przepływy agentowe z nominalnym PKB. Model należy więc interpretować jako narzędzie do badania kanałów transmisji i trajektorii makro-finansowych, a nie jako pełną mikrosymulację demograficzną każdego obywatela.
+
+Kluczowym elementem architektury jest warstwa księgowa. Każdy przepływ pieniężny przechodzi przez ledger weryfikujący identyczności SFC. Jeżeli przepływ nie bilansuje się, symulacja zatrzymuje się z błędem. To rozdziela dwa poziomy dyskusji. Można dyskutować parametry reakcji NBP, elastyczność substytucji, reguły wejścia firm lub zachowanie gospodarstw. Nie powinno się natomiast dyskutować, czy pieniądz znika w trakcie symulacji.
+
+Z punktu widzenia niniejszej pracy istotne są następujące własności techniczne narzędzia:
+
+\begin{itemize}
+    \item \textbf{Stock-flow consistency.} Silnik wymusza 15 dokładnych identyczności księgowych w każdym miesiącu symulacji.
+    \item \textbf{Heterogeniczność agentów.} Firmy, gospodarstwa i banki mają własny stan, decyzje i ograniczenia, zamiast być redukowane do jednego reprezentatywnego agenta.
+    \item \textbf{Warstwa ledgera.} Przepływy finansowe są wykonywane przez osobny interpreter przepływów \ledger{}, używany jako submoduł projektu.
+    \item \textbf{Oddzielenie stanów.} Model rozróżnia stan behawioralny agentów, stan makroekonomiczny oraz księgowo kontrolowany stan finansowy.
+    \item \textbf{Replikowalność.} Scenariusze są uruchamiane z określonymi seedami, horyzontem miesięcznym i artefaktami CSV zapisywanymi w katalogu \texttt{mc/}.
+    \item \textbf{Dokumentacja badawcza.} Repozytorium zawiera opis ODD/ODD+D, równania behawioralne, rejestr kalibracji, most do rachunków narodowych i finansowych, raport walidacyjny oraz rejestr scenariuszy.
+\end{itemize}
+
+\subsection{Macierze SFC jako artefakty dowodowe}
+
+W obecnej wersji materiału istotne jest dopowiedzenie, że \amor{} nie ma wyłącznie deklaratywnej zgodności SFC. Pełne tabele macierzy SFC zostały dołączone do pracy w aneksie~\ref{app:sfc-matrices}. Są one tworzone z wykonanego deterministycznego kroku symulacji, a nie rysowane ręcznie na potrzeby prezentacji.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\textwidth}{p{0.28\textwidth}X}
+\toprule
+\textbf{Artefakt} & \textbf{Znaczenie dla pracy} \\
+\midrule
+Balance Sheet Matrix & Symboliczna macierz zasobów według instrumentów i sektorów: gospodarstwa, firmy, banki, rząd, NBP, ubezpieczenia, fundusze i zagranica. Wiersze stosują konwencję aktywa dodatnie, zobowiązania ujemne, z jawną sumą wiersza. \\
+Transactions Flow Matrix & Symboliczna miesięczna macierz przepływów: konsumpcja, płace, podatki, składki, transfery, wydatki rządowe, odsetki, kupony, dywidendy, handel zagraniczny, kredyt, obligacje i zmiana depozytów. \\
+Stock-flow reconciliation & Tabela dowodowa porównująca oczekiwane i faktyczne zmiany zasobów lub identyczności poziomów. Reszta ma wartość zero dla przechodzących wierszy. \\
+Matrix mapping & Tabela śledzenia łącząca symboliczne wiersze macierzy z typami aktywów, mechanizmami przepływów i identyfikatorami runtime w kodzie. \\
+\bottomrule
+\end{tabularx}
+\caption{Artefakty macierzy SFC generowane z modelu \amor{} i rozwinięte w aneksie~\ref{app:sfc-matrices}.}
+\label{tab:sfc-artifacts}
+\end{table}
+
+Znaczenie tych artefaktów jest praktyczne. Macierze SFC stanowią pomost między akademickim językiem Godleya i Lavoie a wykonywalnym kodem. Balance Sheet Matrix pokazuje strukturę zasobów, Transactions Flow Matrix pokazuje przepływy między sektorami, a mapping wskazuje, który fragment runtime odpowiada za dany wiersz symboliczny. Dzięki temu twierdzenie o zgodności stock-flow consistent nie jest tylko deklaracją metodologiczną, lecz ma postać sprawdzalnego artefaktu projektowego.
+
+W kontekście BDP jest to szczególnie ważne. Transfer fiskalny nie może być dopisany wyłącznie jako dodatkowy dochód gospodarstw domowych. Musi pojawić się równocześnie po stronie wydatku sektora publicznego, deficytu, długu lub finansowania, a następnie oddziaływać na popyt, płace, inflację, koszt kapitału i bilanse banków. Macierze SFC i ledger wymuszają właśnie taki sposób myślenia: każdy impuls polityki publicznej ma drugą stronę księgową.
+
+W kontekście tej pracy \amor{} pełni funkcję instrumentu badawczego, a nie ilustracji marketingowej. Jego wartość polega na tym, że hipotezę można zaimplementować, uruchomić, powtórzyć i sfalsyfikować. Zewnętrzny badacz może sklonować repozytorium, sprawdzić mechanizm BDP, uruchomić te same seedy i porównać wyniki.

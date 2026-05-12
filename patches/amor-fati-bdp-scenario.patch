@@ -1,0 +1,525 @@
+diff --git a/docs/behavioral-equations-and-decision-rules.md b/docs/behavioral-equations-and-decision-rules.md
+index fc95eaa9..3f5de3e4 100644
+--- a/docs/behavioral-equations-and-decision-rules.md
++++ b/docs/behavioral-equations-and-decision-rules.md
+@@ -117,10 +117,12 @@ annualizedBase_h = 12 * pitBase_h
+ pit_h = max(grossTax(annualizedBase_h) - annualTaxCredit, 0) / 12
+ ```
+ 
+-The current social-transfer rule is a lump-sum 800+ payment:
++The baseline social-transfer rule is a lump-sum 800+ payment. Basic-income
++counterfactuals add an unconditional monthly household transfer that is zero in
++`SimParams.defaults`:
+ 
+ ```text
+-socialTransfer_h = dependentChildren_h * social800
++socialTransfer_h = dependentChildren_h * social800 + basicIncomeMonthly
+ income_h = grossIncome_h - pit_h + socialTransfer_h
+ ```
+ 
+@@ -261,6 +263,8 @@ newMinWage = max(previousMinWage,
+                  inflIndexed + max(targetMinWage - inflIndexed, 0)
+                  * minWageConvergenceSpeed)
+ reservationWage = newMinWage
++                  + basicIncomeMonthly
++                    * basicIncomeReservationWagePassThrough
+ ```
+ 
+ ### Wage Clearing
+diff --git a/docs/calibration-register.md b/docs/calibration-register.md
+index f1205276..af52142f 100644
+--- a/docs/calibration-register.md
++++ b/docs/calibration-register.md
+@@ -41,7 +41,7 @@ These counts are rendered from `CalibrationProvenance.Baseline` at generation ti
+ | `CODE_NOTE_EMPIRICAL` | 61 |
+ | `ASSUMED` | 31 |
+ | `TUNED_NEEDS_VALIDATION` | 85 |
+-| `POLICY_SCENARIO` | 7 |
++| `POLICY_SCENARIO` | 8 |
+ | `PLACEHOLDER` | 1 |
+ | `UNKNOWN_SOURCE` | 0 |
+ 
+@@ -325,6 +325,7 @@ a concrete diagnostic artifact path.
+ | `fiscal.jstPitShare`, `jstCitShare` | `0.3846, 0.0671` | share | Code note bridge: JST revenue act | Local-government tax shares | Direct | `FiscalConfig` | `EMPIRICAL` |
+ | `fiscal.pitRate1`, `pitRate2`, `pitBracket1Annual` | `0.12, 0.32, 120000` | rate/PLN/year | Current PIT-law bridge prior | PIT brackets | Annualized monthly PIT | `FiscalConfig` | `EMPIRICAL` |
+ | `fiscal.social800` | `800` | PLN/month/child | Code note bridge: legal act 2023 | 800+ benefit | Direct | `FiscalConfig` | `EMPIRICAL` |
++| `fiscal.basicIncomeMonthly`, `basicIncomeReservationWagePassThrough` | `0, 0.0` | PLN/month/share | Scenario switch | Basic-income transfer and reservation-wage pass-through off in baseline | Direct jar BDP parameter; `Main` defaults to `lambda=0.5` when `--bdp > 0`, allows `--bdp-lambda` robustness overrides, and each level is compared through generated `mc/` outputs | `FiscalConfig`, `Household`, `FiscalConstraintEconomics`, `Main` | `POLICY_SCENARIO` |
+ | `monetary.initialRate` | `0.0375` | annual rate | NBP MPC decision, April 2026 | NBP reference rate | Direct | `MonetaryConfig` | `EMPIRICAL` |
+ | `monetary.initialInflation` | `0.030` | annual rate | GUS CPI, March 2026 | Starting CPI inflation stock | Direct | `MonetaryConfig`, `WorldInit` | `EMPIRICAL` |
+ | `monetary.initialExpectedInflation` | `0.025` | annual rate | NBP target anchor | Starting expected inflation stock | Direct | `MonetaryConfig`, `Expectations` | `TUNED_NEEDS_VALIDATION` |
+diff --git a/docs/operations.md b/docs/operations.md
+index c9a97cc4..168722c9 100644
+--- a/docs/operations.md
++++ b/docs/operations.md
+@@ -319,6 +319,30 @@ Run every registered scenario with a small seed envelope:
+ sbt "scenarioRun --scenarios all --seeds 2 --months 24 --run-id local-review --out target/scenarios"
+ ```
+ 
++Build the production jar:
++
++```bash
++sbt assembly
++```
++
++Run one MBA basic-income counterfactual point from the normal jar entrypoint:
++
++```bash
++java -jar target/scala-3.8.2/amor-fati.jar 10 bdp-2000 --duration 60 --run-id bdp-2000-60m-10s --bdp 2000
++```
++
++For a sweep, run the jar once per BDP level with the same seed count and
++duration. Downstream Python scripts can compare the generated `mc/` files across
++output prefixes such as `bdp-0000`, `bdp-0500`, and `bdp-2000`.
++BDP runs use the central reservation-wage pass-through assumption `lambda=0.5`
++by default. Override it with `--bdp-lambda <0..1>` for robustness checks; baseline
++runs without `--bdp` or with `--bdp 0` leave the baseline parameters unchanged.
++
++```bash
++java -jar target/scala-3.8.2/amor-fati.jar 10 bdp-2000-lambda-075 \
++  --duration 60 --run-id bdp-2000-lambda-075-60m-10s --bdp 2000 --bdp-lambda 0.75
++```
++
+ Robustness scenario sets come from
+ `src/main/scala/com/boombustgroup/amorfati/config/RobustnessScenarios.scala` and
+ are documented in
+diff --git a/src/main/scala/com/boombustgroup/amorfati/Main.scala b/src/main/scala/com/boombustgroup/amorfati/Main.scala
+index e3633c5b..89784540 100644
+--- a/src/main/scala/com/boombustgroup/amorfati/Main.scala
++++ b/src/main/scala/com/boombustgroup/amorfati/Main.scala
+@@ -1,66 +1,135 @@
+ package com.boombustgroup.amorfati
+ 
+-import com.boombustgroup.amorfati.config.SimParams
++import com.boombustgroup.amorfati.config.{BasicIncomePolicyConfig, SimParams}
++import com.boombustgroup.amorfati.fp.FixedPointBase
+ import com.boombustgroup.amorfati.montecarlo.{McRunConfig, McRunner}
++import com.boombustgroup.amorfati.types.*
+ import com.boombustgroup.amorfati.util.BuildInfo
+ import zio.*
+ 
+ // $COVERAGE-OFF$ entry point only
+ object Main extends ZIOAppDefault:
++  private[amorfati] final case class CliConfig(
++      runConfig: McRunConfig,
++      simParams: SimParams,
++      basicIncomeMonthly: PLN,
++      basicIncomeReservationWagePassThrough: Share,
++  )
++
++  private[amorfati] val BasicIncomeReservationWagePassThrough: Share =
++    Share.decimal(50, 2)
++
+   override def run: ZIO[ZIOAppArgs, Any, Any] =
+     for
+       args           <- getArgs
+-      rc             <- parseArgs(args)
+-      given SimParams = SimParams.defaults
+-      _              <- Console.printLine(prepareBanner(rc))
++      cli            <- parseArgs(args)
++      given SimParams = cli.simParams
++      _              <- Console.printLine(prepareBanner(cli))
+       _              <- McRunner
+-        .runZIO(rc)
++        .runZIO(cli.runConfig)
+         .catchAll: err =>
+           Console.printLineError(err.toString) *> ZIO.fail(err)
+     yield ()
+ 
+-  private def prepareBanner(rc: McRunConfig)(using p: SimParams): String =
++  private def prepareBanner(cli: CliConfig)(using p: SimParams): String =
++    val rc       = cli.runConfig
+     val commit   = BuildInfo.gitCommit
+     val firms    = String.format(java.util.Locale.US, "%,d", p.pop.firmsCount: Integer)
+     val asciiArt = com.github.lalyos.jfiglet.FigletFont.convertOneLine("AMOR-FATI").stripTrailing()
++    val bdpLine  =
++      s"BDP=${cli.basicIncomeMonthly.format(0)} PLN/month  |  reservation-wage pass-through=${cli.basicIncomeReservationWagePassThrough.format(2)}"
+     s"""
+        |$asciiArt
+        |
+        |  SFC-ABM  |  commit: $commit
+        |
+        |  N=${rc.nSeeds} seeds  |  PLN (NBP)  |  HH=${p.household.count}  |  BANK=multi (6+Others)
++       |  $bdpLine
+        |  $firms firms x 6 sectors x Poland 2026-04-30 x ${p.topology.label} x ${rc.runDurationMonths}m
+        |
+        |  Apache 2.0 | Copyright 2026 BoomBustGroup | www.boombustgroup.com
+        |""".stripMargin
+ 
+-  private def parseArgs(args: Chunk[String]): ZIO[Any, IllegalArgumentException, McRunConfig] =
+-    val usage = "Usage: amor-fati <nSeeds> <prefix> [--duration <months>] [--run-id <id>]"
++  private[amorfati] def parseArgs(args: Chunk[String]): ZIO[Any, IllegalArgumentException, CliConfig] =
++    val usage =
++      "Usage: amor-fati <nSeeds> <prefix> [--duration <months>] [--run-id <id>] [--bdp <pln>] [--bdp-lambda <0..1>]"
++
++    val knownFlags = Set("--duration", "--run-id", "--bdp", "--basic-income", "--basic-income-monthly", "--bdp-lambda")
+ 
+-    def findFlag(name: String): Option[String] =
+-      val idx = args.indexOf(name)
+-      if idx >= 0 && idx + 1 < args.length then Some(args(idx + 1)) else None
++    def findFlag(names: String*): Either[String, Option[String]] =
++      val hits = names.flatMap(name =>
++        args.indexOf(name) match
++          case idx if idx >= 0 => Some(name -> idx)
++          case _               => None,
++      )
++      hits.toVector match
++        case Vector()          => Right(None)
++        case Vector(name -> i) =>
++          if i + 1 >= args.length || args(i + 1).startsWith("--") then Left(s"$name requires a value")
++          else Right(Some(args(i + 1)))
++        case many              => Left(s"Use only one of: ${many.map(_._1).mkString(", ")}")
+ 
+     def parseInt(value: String, label: String): Either[String, Int] =
+       scala.util.Try(value.toInt).toOption.toRight(s"$label must be an integer")
+ 
++    def parseNonNegativeLong(value: String, label: String): Either[String, Long] =
++      scala.util
++        .Try(value.toLong)
++        .toOption
++        .toRight(s"$label must be an integer")
++        .flatMap: parsed =>
++          Either.cond(parsed >= 0L, parsed, s"$label must be non-negative")
++
++    def parseShare(value: String, label: String): Either[String, Share] =
++      scala.util
++        .Try(BigDecimal(value))
++        .toEither
++        .left
++        .map(_ => s"$label must be a decimal in [0,1]")
++        .flatMap: parsed =>
++          Either.cond(parsed >= BigDecimal(0) && parsed <= BigDecimal(1), parsed, s"$label must be in [0,1]")
++        .flatMap: parsed =>
++          val scaled = parsed * BigDecimal(FixedPointBase.Scale)
++          scala.util
++            .Try(scaled.setScale(0).toLongExact)
++            .toEither
++            .left
++            .map(_ => s"$label supports at most four decimal places")
++            .map(Share.fromRaw)
++
++    def rejectUnknownFlags: Either[String, Unit] =
++      val unknown = args.drop(2).filter(arg => arg.startsWith("--") && !knownFlags.contains(arg))
++      Either.cond(unknown.isEmpty, (), s"Unknown argument: ${unknown.head}")
++
+     ZIO
+       .fromEither(for
+-        _           <- Either.cond(args.length >= 2, (), usage)
+-        nSeedsValue <- args.headOption.toRight(usage)
+-        nSeeds      <- parseInt(nSeedsValue, "<nSeeds>")
+-        prefix      <- args.lift(1).toRight(usage)
+-        runDuration <- findFlag("--duration") match
++        _                  <- Either.cond(args.length >= 2, (), usage)
++        _                  <- rejectUnknownFlags
++        nSeedsValue        <- args.headOption.toRight(usage)
++        nSeeds             <- parseInt(nSeedsValue, "<nSeeds>")
++        prefix             <- args.lift(1).toRight(usage)
++        runDuration        <- findFlag("--duration").flatMap:
+           case Some(value) => parseInt(value, "--duration")
+           case None        => Right(McRunConfig.DefaultRunDuration)
+-        mcRunConfig <- scala.util
++        basicIncomeMonthly <- findFlag("--bdp", "--basic-income", "--basic-income-monthly").flatMap:
++          case Some(value) => parseNonNegativeLong(value, "--bdp")
++          case None        => Right(0L)
++        configuredLambda   <- findFlag("--bdp-lambda").flatMap:
++          case Some(value) => parseShare(value, "--bdp-lambda")
++          case None        => Right(BasicIncomeReservationWagePassThrough)
++        runId              <- findFlag("--run-id")
++        mcRunConfig        <- scala.util
+           .Try:
+-            findFlag("--run-id") match
++            runId match
+               case Some(id) => McRunConfig(nSeeds, prefix, runDuration, id)
+               case None     => McRunConfig(nSeeds, prefix, runDuration)
+           .toEither
+           .left
+           .map(_.getMessage)
+-      yield mcRunConfig)
++        passThrough         = if basicIncomeMonthly > 0L then configuredLambda else Share.Zero
++        simParams           =
++          if basicIncomeMonthly > 0L then BasicIncomePolicyConfig.params(PLN(basicIncomeMonthly), passThrough)
++          else SimParams.defaults
++      yield CliConfig(mcRunConfig, simParams, PLN(basicIncomeMonthly), passThrough))
+       .mapError(err => new IllegalArgumentException(if err == usage then usage else s"$err\n$usage"))
+ // $COVERAGE-ON$
+diff --git a/src/main/scala/com/boombustgroup/amorfati/agents/Household.scala b/src/main/scala/com/boombustgroup/amorfati/agents/Household.scala
+index 4ea4a541..ec07ab86 100644
+--- a/src/main/scala/com/boombustgroup/amorfati/agents/Household.scala
++++ b/src/main/scala/com/boombustgroup/amorfati/agents/Household.scala
+@@ -167,7 +167,7 @@ object Household:
+       sectorMobilityRate: Share,     // fraction employed in different sector than last
+       totalRemittances: PLN,         // aggregate remittances sent abroad
+       totalPit: PLN,                 // aggregate PIT paid
+-      totalSocialTransfers: PLN,     // aggregate 800+ social transfers
++      totalSocialTransfers: PLN,     // aggregate child benefits and basic-income transfers
+       totalConsumerDebtService: PLN, // aggregate consumer debt service
+       totalConsumerOrigination: PLN, // aggregate new consumer loans
+       totalConsumerDefault: PLN,     // aggregate consumer loan defaults
+@@ -516,10 +516,12 @@ object Household:
+             (annualized - p.fiscal.pitBracket1Annual) * p.fiscal.pitRate2
+       (grossTax - p.fiscal.pitTaxCreditAnnual).max(PLN.Zero) / 12L
+ 
+-  /** Compute 800+ social transfer (PIT-exempt, lump-sum per child ≤ 18). */
++  /** Compute PIT-exempt household social transfer: 800+ plus optional basic
++    * income.
++    */
+   def computeSocialTransfer(numChildren: Int)(using p: SimParams): PLN =
+-    if numChildren <= 0 then PLN.Zero
+-    else numChildren * p.fiscal.social800
++    val childBenefit = if numChildren <= 0 then PLN.Zero else numChildren * p.fiscal.social800
++    childBenefit + p.fiscal.basicIncomeMonthly
+ 
+   /** Unemployment benefit (zasilek): 1500 PLN m1-3, 1200 PLN m4-6, 0 after. */
+   def computeBenefit(monthsUnemployed: Int)(using p: SimParams): PLN =
+diff --git a/src/main/scala/com/boombustgroup/amorfati/config/BasicIncomePolicyConfig.scala b/src/main/scala/com/boombustgroup/amorfati/config/BasicIncomePolicyConfig.scala
+new file mode 100644
+index 00000000..f23a5084
+--- /dev/null
++++ b/src/main/scala/com/boombustgroup/amorfati/config/BasicIncomePolicyConfig.scala
+@@ -0,0 +1,15 @@
++package com.boombustgroup.amorfati.config
++
++import com.boombustgroup.amorfati.types.*
++
++object BasicIncomePolicyConfig:
++
++  def params(transferMonthly: PLN, reservationWagePassThrough: Share): SimParams =
++    SimParams.defaults.copy(
++      fiscal = SimParams.defaults.fiscal.copy(
++        basicIncomeMonthly = transferMonthly,
++        basicIncomeReservationWagePassThrough = reservationWagePassThrough,
++      ),
++    )
++
++end BasicIncomePolicyConfig
+diff --git a/src/main/scala/com/boombustgroup/amorfati/config/CalibrationProvenance.scala b/src/main/scala/com/boombustgroup/amorfati/config/CalibrationProvenance.scala
+index cdc7fe66..7f4673c7 100644
+--- a/src/main/scala/com/boombustgroup/amorfati/config/CalibrationProvenance.scala
++++ b/src/main/scala/com/boombustgroup/amorfati/config/CalibrationProvenance.scala
+@@ -589,6 +589,7 @@ object CalibrationProvenance:
+ | `fiscal.jstPitShare`, `jstCitShare` | `0.3846`, `0.0671` | share | Code note bridge: JST revenue act | Local-government tax shares | Direct | `FiscalConfig` | `EMPIRICAL` |
+ | `fiscal.pitRate1`, `pitRate2`, `pitBracket1Annual` | `0.12`, `0.32`, `120000` | rate/PLN/year | Current PIT-law bridge prior | PIT brackets | Annualized monthly PIT | `FiscalConfig` | `EMPIRICAL` |
+ | `fiscal.social800` | `800` | PLN/month/child | Code note bridge: legal act 2023 | 800+ benefit | Direct | `FiscalConfig` | `EMPIRICAL` |
++| `fiscal.basicIncomeMonthly`, `basicIncomeReservationWagePassThrough` | `0`, `0.0` | PLN/month/share | Scenario switch | Basic-income transfer and reservation-wage pass-through off in baseline | Direct jar BDP parameter; `Main` defaults to `lambda=0.5` when `--bdp > 0`, allows `--bdp-lambda` robustness overrides, and each level is compared through generated `mc/` outputs | `FiscalConfig`, `Household`, `FiscalConstraintEconomics`, `Main` | `POLICY_SCENARIO` |
+ | `monetary.initialRate` | `0.0375` | annual rate | NBP MPC decision, April 2026 | NBP reference rate | Direct | `MonetaryConfig` | `EMPIRICAL` |
+ | `monetary.initialInflation` | `0.030` | annual rate | GUS CPI, March 2026 | Starting CPI inflation stock | Direct | `MonetaryConfig`, `WorldInit` | `EMPIRICAL` |
+ | `monetary.initialExpectedInflation` | `0.025` | annual rate | NBP target anchor | Starting expected inflation stock | Direct | `MonetaryConfig`, `Expectations` | `TUNED_NEEDS_VALIDATION` |
+diff --git a/src/main/scala/com/boombustgroup/amorfati/config/FiscalConfig.scala b/src/main/scala/com/boombustgroup/amorfati/config/FiscalConfig.scala
+index 125b48a8..ec9680f4 100644
+--- a/src/main/scala/com/boombustgroup/amorfati/config/FiscalConfig.scala
++++ b/src/main/scala/com/boombustgroup/amorfati/config/FiscalConfig.scala
+@@ -146,6 +146,10 @@ import com.boombustgroup.amorfati.types.*
+   *   monthly 800+ benefit per child (PLN, Dz.U. 2023)
+   * @param social800ChildrenPerHh
+   *   average number of eligible children per household
++  * @param basicIncomeMonthly
++  *   monthly basic-income transfer per household; zero in baseline
++  * @param basicIncomeReservationWagePassThrough
++  *   share of basic income added to the reservation wage; zero in baseline
+   */
+ case class FiscalConfig(
+     // Tax rates
+@@ -236,6 +240,9 @@ case class FiscalConfig(
+     // Social 800+ (Dz.U. 2023)
+     social800: PLN = PLN(800),
+     social800ChildrenPerHh: Scalar = Scalar.decimal(35, 2),
++    // Basic income counterfactual switches
++    basicIncomeMonthly: PLN = PLN.Zero,
++    basicIncomeReservationWagePassThrough: Share = Share.Zero,
+ ):
+   require(citRate >= Rate.Zero && citRate <= Rate(1), s"citRate must be in [0,1]: $citRate")
+   require(govBaseSpending >= PLN.Zero, s"govBaseSpending must be non-negative: $govBaseSpending")
+@@ -248,3 +255,8 @@ case class FiscalConfig(
+   require(fofGovWeights.length == 6, s"fofGovWeights must have 6 sectors: ${fofGovWeights.length}")
+   require(fofExportShares.length == 6, s"fofExportShares must have 6 sectors: ${fofExportShares.length}")
+   require(fofInvestWeights.length == 6, s"fofInvestWeights must have 6 sectors: ${fofInvestWeights.length}")
++  require(basicIncomeMonthly >= PLN.Zero, s"basicIncomeMonthly must be non-negative: $basicIncomeMonthly")
++  require(
++    basicIncomeReservationWagePassThrough >= Share.Zero && basicIncomeReservationWagePassThrough <= Share.One,
++    s"basicIncomeReservationWagePassThrough must be in [0,1]: $basicIncomeReservationWagePassThrough",
++  )
+diff --git a/src/main/scala/com/boombustgroup/amorfati/engine/economics/FiscalConstraintEconomics.scala b/src/main/scala/com/boombustgroup/amorfati/engine/economics/FiscalConstraintEconomics.scala
+index c74202b9..76f087d5 100644
+--- a/src/main/scala/com/boombustgroup/amorfati/engine/economics/FiscalConstraintEconomics.scala
++++ b/src/main/scala/com/boombustgroup/amorfati/engine/economics/FiscalConstraintEconomics.scala
+@@ -46,7 +46,7 @@ object FiscalConstraintEconomics:
+         (w.gov.minWageLevel.max(adjusted), w.priceLevel)
+       else (w.gov.minWageLevel, w.gov.minWagePriceLevel)
+ 
+-    val resWage = baseMinWage
++    val resWage = baseMinWage + p.fiscal.basicIncomeMonthly * p.fiscal.basicIncomeReservationWagePassThrough
+ 
+     val rawLendingBaseRate =
+       val exp = w.mechanisms.expectations
+diff --git a/src/test/scala/com/boombustgroup/amorfati/MainSpec.scala b/src/test/scala/com/boombustgroup/amorfati/MainSpec.scala
+new file mode 100644
+index 00000000..d07f72cc
+--- /dev/null
++++ b/src/test/scala/com/boombustgroup/amorfati/MainSpec.scala
+@@ -0,0 +1,77 @@
++package com.boombustgroup.amorfati
++
++import com.boombustgroup.amorfati.types.*
++import org.scalatest.flatspec.AnyFlatSpec
++import org.scalatest.matchers.should.Matchers
++import zio.{Chunk, Exit, Runtime, Unsafe}
++
++class MainSpec extends AnyFlatSpec with Matchers:
++
++  "Main CLI parser" should "keep baseline parameters when BDP is not provided" in {
++    val cli = parse("10", "baseline", "--duration", "60", "--run-id", "baseline-60m-10s")
++
++    cli.runConfig.nSeeds shouldBe 10
++    cli.runConfig.outputPrefix shouldBe "baseline"
++    cli.runConfig.runDurationMonths shouldBe 60
++    cli.runConfig.runId shouldBe "baseline-60m-10s"
++    cli.basicIncomeMonthly shouldBe PLN.Zero
++    cli.basicIncomeReservationWagePassThrough shouldBe Share.Zero
++    cli.simParams.fiscal.basicIncomeMonthly shouldBe PLN.Zero
++    cli.simParams.fiscal.basicIncomeReservationWagePassThrough shouldBe Share.Zero
++  }
++
++  it should "apply the BDP parameter to fiscal transfers and reservation wages" in {
++    val cli = parse("10", "bdp-2000", "--duration", "60", "--run-id", "bdp-2000-60m-10s", "--bdp", "2000")
++
++    cli.basicIncomeMonthly shouldBe PLN(2000)
++    cli.basicIncomeReservationWagePassThrough shouldBe Share.decimal(50, 2)
++    cli.simParams.fiscal.basicIncomeMonthly shouldBe PLN(2000)
++    cli.simParams.fiscal.basicIncomeReservationWagePassThrough shouldBe Share.decimal(50, 2)
++  }
++
++  it should "allow overriding the BDP reservation-wage pass-through" in {
++    val cli = parse(
++      "10",
++      "bdp-2000-lambda-075",
++      "--duration",
++      "60",
++      "--run-id",
++      "bdp-2000-lambda-075-60m-10s",
++      "--bdp",
++      "2000",
++      "--bdp-lambda",
++      "0.75",
++    )
++
++    cli.basicIncomeMonthly shouldBe PLN(2000)
++    cli.basicIncomeReservationWagePassThrough shouldBe Share.decimal(75, 2)
++    cli.simParams.fiscal.basicIncomeMonthly shouldBe PLN(2000)
++    cli.simParams.fiscal.basicIncomeReservationWagePassThrough shouldBe Share.decimal(75, 2)
++  }
++
++  it should "keep zero baseline pass-through even when lambda is provided without BDP" in {
++    val cli = parse("10", "baseline", "--bdp", "0", "--bdp-lambda", "1.0")
++
++    cli.basicIncomeMonthly shouldBe PLN.Zero
++    cli.basicIncomeReservationWagePassThrough shouldBe Share.Zero
++    cli.simParams.fiscal.basicIncomeMonthly shouldBe PLN.Zero
++    cli.simParams.fiscal.basicIncomeReservationWagePassThrough shouldBe Share.Zero
++  }
++
++  it should "reject BDP lambda values outside the share range" in {
++    parseFailure("10", "bdp-2000", "--bdp", "2000", "--bdp-lambda", "1.25").getMessage should include("--bdp-lambda must be in [0,1]")
++  }
++
++  private def parse(args: String*): Main.CliConfig =
++    Unsafe.unsafe: unsafe =>
++      given Unsafe = unsafe
++      Runtime.default.unsafe.run(Main.parseArgs(Chunk.fromIterable(args))).getOrThrowFiberFailure()
++
++  private def parseFailure(args: String*): IllegalArgumentException =
++    Unsafe.unsafe: unsafe =>
++      given Unsafe = unsafe
++      Runtime.default.unsafe.run(Main.parseArgs(Chunk.fromIterable(args))) match
++        case Exit.Success(_)     => fail("expected parse failure")
++        case Exit.Failure(cause) => cause.failureOption.getOrElse(fail("expected typed parse failure"))
++
++end MainSpec
+diff --git a/src/test/scala/com/boombustgroup/amorfati/agents/SocialTransferSpec.scala b/src/test/scala/com/boombustgroup/amorfati/agents/SocialTransferSpec.scala
+index 7e26b671..5583a2e1 100644
+--- a/src/test/scala/com/boombustgroup/amorfati/agents/SocialTransferSpec.scala
++++ b/src/test/scala/com/boombustgroup/amorfati/agents/SocialTransferSpec.scala
+@@ -5,19 +5,19 @@ import com.boombustgroup.amorfati.TestHouseholdState
+ import com.boombustgroup.amorfati.FixedPointSpecSupport.*
+ import org.scalatest.flatspec.AnyFlatSpec
+ import org.scalatest.matchers.should.Matchers
+-import com.boombustgroup.amorfati.config.SimParams
++import com.boombustgroup.amorfati.config.{BasicIncomePolicyConfig, SimParams}
+ import com.boombustgroup.amorfati.engine.markets.FiscalBudget
+ import com.boombustgroup.amorfati.types.*
+ import com.boombustgroup.amorfati.util.Distributions
+ 
+ import com.boombustgroup.amorfati.random.RandomStream
+ 
+-/** Social transfers (800+ child benefit) unit tests. */
++/** Social transfers (800+ child benefit and basic income) unit tests. */
+ class SocialTransferSpec extends AnyFlatSpec with Matchers:
+ 
+   given SimParams = SimParams.defaults
+ 
+-  "computeSocialTransfer" should "return 0 for 0 children regardless of config" in {
++  "computeSocialTransfer" should "return 0 for 0 children under baseline config" in {
+     Household.computeSocialTransfer(0) shouldBe PLN.Zero
+   }
+ 
+@@ -43,6 +43,13 @@ class SocialTransferSpec extends AnyFlatSpec with Matchers:
+     }
+   }
+ 
++  it should "add basic income independently from child benefit" in {
++    val params = BasicIncomePolicyConfig.params(PLN(2000), Share.Zero)
++
++    Household.computeSocialTransfer(0)(using params) shouldBe PLN(2000)
++    Household.computeSocialTransfer(2)(using params) shouldBe PLN(3600)
++  }
++
+   "poissonSample" should "return 0 for lambda=0" in {
+     val rng = RandomStream.seeded(42)
+     Distributions.poissonSample(Scalar.Zero, rng) shouldBe 0
+diff --git a/src/test/scala/com/boombustgroup/amorfati/config/CalibrationProvenanceSpec.scala b/src/test/scala/com/boombustgroup/amorfati/config/CalibrationProvenanceSpec.scala
+index f9812533..378587b3 100644
+--- a/src/test/scala/com/boombustgroup/amorfati/config/CalibrationProvenanceSpec.scala
++++ b/src/test/scala/com/boombustgroup/amorfati/config/CalibrationProvenanceSpec.scala
+@@ -39,7 +39,7 @@ class CalibrationProvenanceSpec extends AnyFlatSpec with Matchers:
+ 
+   "Baseline calibration provenance" should "preserve the active default inventory status counts in code" in {
+     CalibrationProvenance.Baseline.parseErrors shouldBe empty
+-    CalibrationProvenance.Baseline.parameters should have size 238
++    CalibrationProvenance.Baseline.parameters should have size 239
+     CalibrationProvenance.Baseline.statusCounts should contain(Empirical -> 36)
+     CalibrationProvenance.Baseline.statusCounts should contain(EmpiricalTransformed -> 17)
+     CalibrationProvenance.Baseline.statusCounts should contain(CodeNoteEmpirical -> 61)
+@@ -47,7 +47,7 @@ class CalibrationProvenanceSpec extends AnyFlatSpec with Matchers:
+     CalibrationProvenance.Baseline.statusCounts.getOrElse(UnknownSource, 0) shouldBe 0
+     CalibrationProvenance.Baseline.statusCounts should contain(Placeholder -> 1)
+     CalibrationProvenance.Baseline.statusCounts should contain(Assumed -> 31)
+-    CalibrationProvenance.Baseline.statusCounts should contain(PolicyScenario -> 7)
++    CalibrationProvenance.Baseline.statusCounts should contain(PolicyScenario -> 8)
+   }
+ 
+   it should "report remaining statuses from the typed registry" in {
+diff --git a/src/test/scala/com/boombustgroup/amorfati/engine/economics/FiscalConstraintEconomicsSpec.scala b/src/test/scala/com/boombustgroup/amorfati/engine/economics/FiscalConstraintEconomicsSpec.scala
+index c92944f6..902fe7b4 100644
+--- a/src/test/scala/com/boombustgroup/amorfati/engine/economics/FiscalConstraintEconomicsSpec.scala
++++ b/src/test/scala/com/boombustgroup/amorfati/engine/economics/FiscalConstraintEconomicsSpec.scala
+@@ -1,6 +1,6 @@
+ package com.boombustgroup.amorfati.engine.economics
+ 
+-import com.boombustgroup.amorfati.config.SimParams
++import com.boombustgroup.amorfati.config.{BasicIncomePolicyConfig, SimParams}
+ import com.boombustgroup.amorfati.engine.SimulationMonth.{CompletedMonth, ExecutionMonth}
+ import com.boombustgroup.amorfati.init.{InitRandomness, WorldInit}
+ import com.boombustgroup.amorfati.types.*
+@@ -24,6 +24,14 @@ class FiscalConstraintEconomicsSpec extends AnyFlatSpec with Matchers:
+     output.updatedMinWagePriceLevel shouldBe world.gov.minWagePriceLevel
+   }
+ 
++  it should "add configured basic-income pass-through to reservation wage" in {
++    val params = BasicIncomePolicyConfig.params(PLN(2000), Share.decimal(50, 2))
++
++    val output = FiscalConstraintEconomics.compute(world, init.banks, init.ledgerFinancialState, ExecutionMonth.First)(using params)
++
++    output.resWage shouldBe output.baseMinWage + PLN(1000)
++  }
++
+   it should "advance month by 1" in {
+     val completedMonth = CompletedMonth.Zero
+     val result         = FiscalConstraintEconomics.compute(world, init.banks, init.ledgerFinancialState, completedMonth.next)

@@ -1,0 +1,147 @@
+\section{Macierze SFC modelu \amor{}}
+\label{app:sfc-matrices}
+
+Poniższe tabele przenoszą do pracy główne artefakty macierzy SFC wygenerowane z deterministycznego przebiegu modelu \amor{}: seed 1, miesiąc 12, commit artefaktu \texttt{89528f07}, status \texttt{sfc=pass} oraz \texttt{matrix=pass}. Odpowiadają snapshotom utrzymywanym w repozytorium w \path{docs/sfc-matrix-artifacts/}. Wartości liczbowe w tabeli rekonsyliacyjnej są w jednostkach wewnętrznych modelu i służą tu przede wszystkim jako dowód zerowych reszt księgowych.
+
+\begin{landscape}
+\scriptsize
+\begin{longtable}{@{}L{3.4cm}*{9}{C{1.45cm}}@{}}
+\caption{Symboliczna Balance Sheet Matrix modelu \amor{}.}
+\label{tab:appendix-bsm}\\
+\toprule
+\textbf{Instrument / sektor} & \textbf{HH} & \textbf{Firmy} & \textbf{Banki} & \textbf{Rząd} & \textbf{NBP} & \textbf{Ubezp.} & \textbf{Fundusze} & \textbf{Zagranica} & \textbf{Suma} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Instrument / sektor} & \textbf{HH} & \textbf{Firmy} & \textbf{Banki} & \textbf{Rząd} & \textbf{NBP} & \textbf{Ubezp.} & \textbf{Fundusze} & \textbf{Zagranica} & \textbf{Suma} \\
+\midrule
+\endhead
+Cash and public balances & $+H_h$ & $+H_f$ & $+H_b$ &  & $-H$ &  & $+H_{pub}$ &  & $0$ \\
+Demand deposits & $+D_h$ & $+D_f$ & $-D$ &  &  &  & $+D_{fnd}$ &  & $0$ \\
+Term deposits & $+TD_h$ &  & $-TD$ &  &  &  &  &  & $0$ \\
+Loans & $-L_h$ & $-L_f$ & $+L$ &  &  &  &  &  & $0$ \\
+Bank reserves &  &  & $+R$ &  & $-R$ &  &  &  & $0$ \\
+Government bonds &  &  & $+B_b$ & $-B_g$ & $+B_{nbp}$ & $+B_{ins}$ & $+B_{fnd}$ & $+B_{row}$ & $0$ \\
+Quasi-fiscal bonds &  &  & $+Q_b$ &  & $+Q_{nbp}$ &  & $-Q$ &  & $0$ \\
+Corporate bonds &  & $-B_c$ & $+B_{cb}$ &  &  & $+B_{ci}$ & $+B_{cf}$ &  & $0$ \\
+Equity & $+E_h$ & $-E$ &  &  &  & $+E_i$ & $+E_f$ & $+E_{row}$ & $0$ \\
+Insurance reserves & $+IR_h$ &  &  &  &  & $-IR$ &  &  & $0$ \\
+Fund units & $+U_h$ &  &  &  &  &  & $-U$ &  & $0$ \\
+Foreign assets &  &  &  &  & $+FA$ &  &  & $-FA$ & $0$ \\
+Net worth & $-NW_h$ & $-NW_f$ & $-NW_b$ & $-NW_g$ & $-NW_{nbp}$ & $-NW_{ins}$ & $-NW_{fnd}$ & $-NW_{row}$ & $0$ \\
+\bottomrule
+\end{longtable}
+\end{landscape}
+
+\begin{landscape}
+\scriptsize
+\begin{longtable}{@{}L{3.5cm}*{9}{C{1.45cm}}@{}}
+\caption{Symboliczna Transactions Flow Matrix modelu \amor{}.}
+\label{tab:appendix-tfm}\\
+\toprule
+\textbf{Przepływ / sektor} & \textbf{HH} & \textbf{Firmy} & \textbf{Banki} & \textbf{Rząd} & \textbf{NBP} & \textbf{Ubezp.} & \textbf{Fundusze} & \textbf{Zagranica} & \textbf{Suma} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Przepływ / sektor} & \textbf{HH} & \textbf{Firmy} & \textbf{Banki} & \textbf{Rząd} & \textbf{NBP} & \textbf{Ubezp.} & \textbf{Fundusze} & \textbf{Zagranica} & \textbf{Suma} \\
+\midrule
+\endhead
+Consumption & $-C_h$ & $+C_h$ &  &  &  &  &  &  & $0$ \\
+Wages and household income & $+W$ & $-W$ &  &  &  &  &  &  & $0$ \\
+Taxes & $-T_h$ & $-T_f$ & $-T_b$ & $+T$ &  &  &  &  & $0$ \\
+Social contributions & $-SC_h$ & $-SC_f$ &  &  &  &  & $+SC$ &  & $0$ \\
+Transfers and benefits & $+TR_h$ &  &  & $-TR_g$ &  &  & $-TR_f$ &  & $0$ \\
+Government spending &  & $+G$ &  & $-G$ &  &  &  &  & $0$ \\
+Insurance premiums and claims & $-P+CL$ &  &  &  &  & $+P-CL$ &  &  & $0$ \\
+Loan interest & $-rL_h$ & $-rL_f$ & $+rL$ &  &  &  &  &  & $0$ \\
+Deposit and reserve interest & $+rD_h$ &  & $-rD+rR$ &  & $-rR$ &  &  &  & $0$ \\
+Bond coupons &  & $-iB_c$ & $+iB_b$ & $-iB_g$ &  & $+iB_i$ & $+iB_f$ & $+iB_{row}$ & $0$ \\
+Dividends & $+Div_h$ & $-Div$ &  & $+Div_g$ &  & $+Div_i$ & $+Div_f$ & $+Div_{row}$ & $0$ \\
+Equity revaluation & $+\Delta E_h^v$ & $-\Delta E^v$ &  &  &  & $+\Delta E_i^v$ & $+\Delta E_f^v$ & $+\Delta E_{row}^v$ & $0$ \\
+External trade and income & $+REM$ & $+X-M$ &  & $+EU$ &  &  &  & $-NX-REM-EU$ & $0$ \\
+Loan origination & $+\Delta L_h$ & $+\Delta L_f$ & $-\Delta L$ &  &  &  &  &  & $0$ \\
+Loan repayment and defaults & $-repL_h$ & $-repL_f$ & $+repL$ &  &  &  &  &  & $0$ \\
+Bond issuance and purchases &  & $+\Delta B_c$ & $-\Delta B_b$ & $+\Delta B_g$ & $-\Delta B_{nbp}$ & $-\Delta B_i$ & $-\Delta B_f$ & $-\Delta B_{row}$ & $0$ \\
+Deposit change & $-\Delta D_h$ & $-\Delta D_f$ & $+\Delta D$ &  &  &  & $-\Delta D_{fnd}$ &  & $0$ \\
+\bottomrule
+\end{longtable}
+\end{landscape}
+
+\begin{landscape}
+\tiny
+\begin{longtable}{@{}L{3.0cm}r r r C{1.0cm}L{12.0cm}@{}}
+\caption{Stock-flow reconciliation and revaluation evidence.}
+\label{tab:appendix-sfr}\\
+\toprule
+\textbf{Identyczność} & \textbf{Expected} & \textbf{Actual} & \textbf{Residual} & \textbf{Status} & \textbf{Kanały runtime i źródło rekonsyliacji} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Identyczność} & \textbf{Expected} & \textbf{Actual} & \textbf{Residual} & \textbf{Status} & \textbf{Kanały runtime i źródło rekonsyliacji} \\
+\midrule
+\endhead
+Bank capital & 23148773.9503 & 23148773.9503 & 0.0000 & pass & Bank capital; firm-loan interest; household debt service; government-bond income; mortgage and consumer-credit interest; corporate-bond coupon; deposit, reserve, standing-facility and interbank interest; firm, mortgage, consumer-credit and corporate-bond losses; BFG levy; unrealized bond loss. Actual delta from bank capital stocks; expected delta from bank P\&L, default/write-off, valuation, provision and capital-destruction channels. \\
+Bank deposits & 85034200.4148 & 85034200.4148 & 0.0000 & pass & Demand deposits; term deposits; household income and consumption; investment settlement; JST revenue and spending; dividends; remittances; diaspora and tourism flows; bail-in; new loans and repayments; consumer credit; insurance premiums and claims; TFI and quasi-fiscal deposit drains/settlements. Actual delta from aggregate bank deposit stocks. \\
+Net foreign assets & -43359354.7341 & -43359354.7341 & 0.0000 & pass & Foreign assets; exports; imports; tourism export/import; primary income; EU funds; diaspora inflow; remittance outflow; capital flight. Expected delta combines current account and independent FX valuation effect from the open-economy module. \\
+Government bond clearing & 9457316371.7134 & 9457316371.7134 & 0.0000 & pass & Government bonds held by banks, NBP, insurance, funds and foreign sector; primary-market issuance; foreign purchases; QE purchases; insurance and TFI purchases. Level check: supported holder stocks equal government bonds outstanding. \\
+Interbank netting & 0.0000 & 0.0000 & 0.0000 & pass & Interbank loans and interbank interest. Level check: interbank positions net to zero. \\
+Mortgage stock & 104018320.7735 & 104018320.7735 & 0.0000 & pass & Mortgage loans; mortgage origination; repayment; default. Actual delta from household mortgage stock; expected delta from origination minus principal repayment and defaults. \\
+Flow of funds & 0.0000 & 0.0000 & 0.0000 & pass & Cash and public fund balances; household consumption; government purchases; trade exports; investment settlement. Runtime ledger conservation is checked through the executed delta ledger. \\
+Consumer credit & -25308504.8922 & -25308504.8922 & 0.0000 & pass & Consumer loans; consumer-credit origination; debt service; default. Actual delta from consumer-loan stocks; expected delta from origination minus debt service and defaults. \\
+Corporate bond stock & -6314770.3700 & -6314770.3700 & 0.0000 & pass & Corporate bonds; issuance; amortization; default. Actual delta from issuer stock; expected delta from issuance minus amortization and defaults. \\
+NBFI credit & -18418682.4632 & -18418682.4632 & 0.0000 & pass & NBFI loans; loan origination; repayment; default. Actual delta from NBFI loan stock; expected delta from origination minus repayment and defaults. \\
+Quasi-fiscal bond stock & 3524687.7375 & 3524687.7375 & 0.0000 & pass & Quasi-fiscal bonds; issuance; amortization. Actual delta from BGK/PFR bonds outstanding. \\
+Quasi-fiscal bond clearing & 1796635521.1344 & 1796635521.1344 & 0.0000 & pass & Quasi-fiscal bonds; issuance; NBP absorption; amortization; NBP amortization. Level check: commercial-bank plus NBP quasi-fiscal holdings equal bonds outstanding. \\
+Quasi-fiscal bank bond holdings & 8831058.5579 & 8831058.5579 & 0.0000 & pass & Quasi-fiscal bonds; issuance; amortization. Actual delta from commercial-bank quasi-fiscal bond holdings; NBP legs are excluded from this bank-specific identity. \\
+Quasi-fiscal NBP bond holdings & -5306370.8204 & -5306370.8204 & 0.0000 & pass & Quasi-fiscal bonds; NBP absorption; NBP bond amortization. Actual delta from NBP quasi-fiscal bond holdings. \\
+Quasi-fiscal credit & 13052407.9012 & 13052407.9012 & 0.0000 & pass & NBFI loans; quasi-fiscal lending; repayment. Actual delta from BGK/PFR subsidized loan portfolio; deposit creation/destruction is reconciled in bank deposits. \\
+\bottomrule
+\end{longtable}
+\end{landscape}
+
+\begin{landscape}
+\tiny
+\begin{longtable}{@{}L{2.4cm}L{3.2cm}L{4.2cm}L{4.6cm}L{7.0cm}@{}}
+\caption{Mapowanie wierszy symbolicznych na aktywa i mechanizmy runtime.}
+\label{tab:appendix-mapping}\\
+\toprule
+\textbf{Macierz} & \textbf{Wiersz} & \textbf{Symbole} & \textbf{Aktywa runtime} & \textbf{Mechanizmy runtime / uwagi} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Macierz} & \textbf{Wiersz} & \textbf{Symbole} & \textbf{Aktywa runtime} & \textbf{Mechanizmy runtime / uwagi} \\
+\midrule
+\endhead
+symbolic-bsm & Cash and public balances & $+H_h$, $+H_f$, $+H_b$, $-H$, $+H_{pub}$, $0$ & Cash and public fund balances (\texttt{Cash}) & Cash covers persisted firm, selected public-fund and NBFI cash plus the paper-level currency shell. \\
+symbolic-bsm & Demand deposits & $+D_h$, $+D_f$, $-D$, $+D_{fnd}$, $0$ & Demand deposits (\texttt{DemandDeposit}) & Holder/issuer deposit row. \\
+symbolic-bsm & Term deposits & $+TD_h$, $-TD$, $0$ & Term deposits (\texttt{TermDeposit}) & Holder/issuer term-deposit row. \\
+symbolic-bsm & Loans & $-L_h$, $-L_f$, $+L$, $0$ & Firm loans; consumer loans; mortgage loans; NBFI loans & Aggregates firm, consumer, mortgage and NBFI credit instruments. \\
+symbolic-bsm & Bank reserves & $+R$, $-R$, $0$ & Bank reserves (\texttt{Reserve}) & Bank reserve assets and NBP reserve liability are persisted. \\
+symbolic-bsm & Government bonds & $+B_b$, $-B_g$, $+B_{nbp}$, $+B_{ins}$, $+B_{fnd}$, $+B_{row}$, $0$ & Government bonds (\texttt{GovBondHTM}, \texttt{GovBondAFS}) & Holder/issuer government-bond row. \\
+symbolic-bsm & Quasi-fiscal bonds & $+Q_b$, $+Q_{nbp}$, $-Q$, $0$ & Quasi-fiscal bonds (\texttt{QuasiFiscalBond}) & BGK/PFR style quasi-fiscal bond row. \\
+symbolic-bsm & Corporate bonds & $-B_c$, $+B_{cb}$, $+B_{ci}$, $+B_{cf}$, $0$ & Corporate bonds (\texttt{CorpBond}) & Corporate issuer and holder row. \\
+symbolic-bsm & Equity & $+E_h$, $-E$, $+E_i$, $+E_f$, $+E_{row}$, $0$ & Equity (\texttt{Equity}) & Foreign equity ownership is holder-resolved; runtime evidence records holder-aware equity revaluation. \\
+symbolic-bsm & Insurance reserves & $+IR_h$, $-IR$, $0$ & Life and non-life insurance reserves & Household reserve asset mirrored by insurance reserve liability. \\
+symbolic-bsm & Fund units & $+U_h$, $-U$, $0$ & TFI units (\texttt{TfiUnit}) & Fund-unit holder/issuer row. \\
+symbolic-bsm & Foreign assets & $+FA$, $-FA$, $0$ & Foreign assets (\texttt{ForeignAsset}) & NBP/foreign-sector asset-liability row. \\
+symbolic-bsm & Net worth & $-NW_h$, $-NW_f$, $-NW_b$, $-NW_g$, $-NW_{nbp}$, $-NW_{ins}$, $-NW_{fnd}$, $-NW_{row}$, $0$ & none & Paper-level column-balancing row; not emitted as a runtime asset. \\
+symbolic-tfm & Consumption & $-C_h$, $+C_h$, $0$ & none & Household consumption [id: 32]. \\
+symbolic-tfm & Wages and household income & $+W$, $-W$, $0$ & none & Household total income [id: 41]. \\
+symbolic-tfm & Taxes & $-T_h$, $-T_f$, $-T_b$, $+T$, $0$ & none & Household PIT [id: 34]; firm CIT [id: 42]; VAT [id: 92]; excise [id: 93]; customs [id: 94]; equity dividend tax [id: 56]. \\
+symbolic-tfm & Social contributions & $-SC_h$, $-SC_f$, $+SC$, $0$ & none & ZUS [id: 1]; NFZ [id: 4]; PPK [id: 7]; Labour Fund [id: 9]; PFRON [id: 12]; FGSP [id: 15]. \\
+symbolic-tfm & Transfers and benefits & $+TR_h$, $-TR_g$, $-TR_f$, $0$ & none & ZUS pension [id: 2]; unemployment benefits [id: 24]; government social transfers [id: 25]. \\
+symbolic-tfm & Government spending & $+G$, $-G$, $0$ & none & Government purchases [id: 21]; capital investment [id: 23]; NFZ health spending [id: 5]; Labour Fund [id: 10]; PFRON [id: 13]; FGSP [id: 16]; JST spending [id: 19]. \\
+symbolic-tfm & Insurance premiums and claims & $-P+CL$, $+P-CL$, $0$ & none & Life/non-life premiums [id: 27, 28]; life/non-life claims [id: 29, 30]; insurance investment income [id: 31]. \\
+symbolic-tfm & Loan interest & $-rL_h$, $-rL_f$, $+rL$, $0$ & none & Household debt service [id: 35]; firm interest [id: 45]; mortgage interest [id: 64]; bank firm-loan interest [id: 76]. \\
+symbolic-tfm & Deposit and reserve interest & $+rD_h$, $-rD+rR$, $-rR$, $0$ & none & Household deposit interest [id: 36]; reserve interest [id: 84]; standing facility [id: 85]; interbank interest [id: 86]. \\
+symbolic-tfm & Bond coupons & $-iB_c$, $+iB_b$, $-iB_g$, $+iB_i$, $+iB_f$, $+iB_{row}$, $0$ & none & Government debt service [id: 22]; bank government-bond income [id: 77]; corporate bond coupon [id: 58]; bank corporate-bond coupon [id: 95]. \\
+symbolic-tfm & Dividends & $+Div_h$, $-Div$, $+Div_g$, $+Div_i$, $+Div_f$, $+Div_{row}$, $0$ & none & Domestic equity dividend [id: 54]; foreign equity dividend [id: 55]; government equity dividend [id: 89]. \\
+symbolic-tfm & Equity revaluation & $+\Delta E_h^v$, $-\Delta E^v$, $+\Delta E_i^v$, $+\Delta E_f^v$, $+\Delta E_{row}^v$, $0$ & Equity (\texttt{Equity}) & Equity revaluation [id: 57]; holder-aware runtime evidence. \\
+symbolic-tfm & External trade and income & $+REM$, $+X-M$, $+EU$, $-NX-REM-EU$, $0$ & none & Exports [id: 66]; imports [id: 67]; tourism [id: 68, 69]; primary income [id: 72]; EU funds [id: 73]; diaspora inflow [id: 74]; remittance outflow [id: 37]. \\
+symbolic-tfm & Loan origination & $+\Delta L_h$, $+\Delta L_f$, $-\Delta L$, $0$ & Firm loans; consumer loans; mortgage loans; NBFI loans & Consumer credit origination [id: 38]; firm new loan [id: 44]; mortgage origination [id: 62]; NBFI origination [id: 104]; quasi-fiscal lending [id: 110]. \\
+symbolic-tfm & Loan repayment and defaults & $-repL_h$, $-repL_f$, $+repL$, $0$ & Firm loans; consumer loans; mortgage loans; NBFI loans & Consumer debt service/default [id: 39, 40]; firm repayment/NPL default [id: 43, 50]; mortgage repayment/default [id: 63, 65]; NBFI repayment/default [id: 105, 106]; quasi-fiscal repayment [id: 111]. \\
+symbolic-tfm & Bond issuance and purchases & $+\Delta B_c$, $-\Delta B_b$, $+\Delta B_g$, $-\Delta B_{nbp}$, $-\Delta B_i$, $-\Delta B_f$, $-\Delta B_{row}$, $0$ & Government bonds; quasi-fiscal bonds; corporate bonds & Government primary market [id: 97]; foreign purchase [id: 98]; NBP QE [id: 99]; insurance and TFI purchases [id: 100, 101]; quasi-fiscal issuance/amortization/NBP absorption [id: 107--109, 114]; corporate issuance/amortization [id: 60, 61]. \\
+symbolic-tfm & Deposit change & $-\Delta D_h$, $-\Delta D_f$, $+\Delta D$, $-\Delta D_{fnd}$, $0$ & Demand and term deposits & Investment deposit settlement [id: 102]; TFI deposit drain [id: 103]; quasi-fiscal lending and repayment deposits [id: 112, 113]. \\
+\bottomrule
+\end{longtable}
+\end{landscape}

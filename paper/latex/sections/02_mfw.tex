@@ -1,0 +1,17 @@
+\section{Punkt odniesienia: MFW i modelowanie BDP}
+
+Raport Międzynarodowego Funduszu Walutowego \textit{Fiscal Monitor: Tackling Inequality} analizuje BDP jako instrument redystrybucyjny, którego skutki należy oceniać przez koszty fiskalne, efektywność, wpływ na podaż pracy oraz zmianę nierówności \parencite{imf2017fiscal}. Szczególnie istotny jest Aneks 1.3, wykorzystujący dynamiczny stochastyczny model równowagi ogólnej zaadaptowany z pracy Lizarazo, Peralta-Alvy i Puya \parencite{lizarazo2017}.
+
+W tej strukturze gospodarka jest podzielona na trzy sektory: przemysł handlowalny, usługi niskoskillowe oraz usługi wysokoskillowe. Gospodarstwa domowe różnią się poziomem wykształcenia i są obarczone idiosynkratycznymi szokami produktywności. Rynki pracy są segmentowane, a krajowe rynki kredytowe są niekompletne. Model porównuje stan benchmarkowy z wariantami reform podatkowo-transferowych, w tym BDP finansowanym cięciami wydatków, wzrostem VAT lub wzrostem progresywnego PIT.
+
+Wniosek MFW jest wewnętrznie spójny: BDP jest progresywny, ale przy tej samej skali kosztu fiskalnego może być zdominowany dobrobytowo przez instrumenty celowane, takie jak rozszerzenie Earned Income Tax Credit. W takim ujęciu pytanie brzmi: jaki instrument redystrybucyjny maksymalizuje dobrobyt społeczny przy zadanym koszcie i założonych mechanizmach finansowania?
+
+Polska w raporcie MFW pojawia się w innej formule. Aneks 1.6 nie jest pełnym DSGE, lecz analizą partial static equilibrium opartą na danych Luxembourg Income Study z 2013 r. Koszt brutto BDP skalibrowanego do 25\% mediany rynkowego dochodu netto per capita wynosi 4,9\% PKB, redukcja współczynnika Giniego wynosi 0,04, redukcja stopy ubóstwa 6,9 punktu procentowego, a kwota BDP to 2 111 zł na osobę rocznie. Nominalnie odpowiada to około 176 zł na osobę miesięcznie, ale jest to wartość osadzona w danych z 2013 r. Po przybliżonej indeksacji rocznymi wskaźnikami CPI GUS za lata 2014--2025 daje to około 273 zł na osobę miesięcznie w cenach średniorocznych 2025 \parencite{gusCpiAnnual}. Właśnie dlatego nie należy porównywać nominalnych 176 zł bezpośrednio z poziomami sweepa \amor{}, które są miesięcznym transferem na agenta reprezentującego gospodarstwo domowe w modelu skalibrowanym do Polski na 2026-04-30.
+
+\input{tables/mfw_scale_bridge}
+
+Tabela~\ref{tab:mfw-scale-bridge} pokazuje, że polski wariant ilustracyjny MFW po indeksacji CPI znajduje się blisko najniższego dodatniego poziomu siatki \amor{}. Oznacza to, że scenariusz \texttt{--bdp 500} jest dobrą dolną kotwicą skali, natomiast poziomy \texttt{--bdp 1000}--\texttt{--bdp 3000} są silniejszymi impulsami fiskalno-dochodowymi. Ich rolą nie jest odtworzenie polskiego ćwiczenia statycznego MFW, lecz przetestowanie progu, przy którym pozytywny impuls popytowy zaczyna ustępować presji fiskalno-finansowej.
+
+\input{tables/mfw_vs_amor_fati}
+
+Z perspektywy niniejszej pracy MFW nie jest przeciwnikiem, lecz punktem odniesienia. Raport odpowiada precyzyjnie na pytanie o redystrybucję i welfare. \amor{} odpowiada na inne pytanie: czy firmy w trakcie przejścia mają finansową i organizacyjną zdolność do automatyzacji. To pytanie wymaga modelu, w którym ścieżka przejścia jest częścią wyniku.

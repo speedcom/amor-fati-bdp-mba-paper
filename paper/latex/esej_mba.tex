@@ -1,0 +1,115 @@
+\documentclass[12pt,a4paper]{article}
+
+% Font and language setup
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setmainlanguage{polish}
+\setotherlanguage{english}
+
+\usepackage{microtype}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{setspace}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{siunitx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{tabularx}
+\usepackage{pdflscape}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage[backend=bibtex,style=authoryear,sorting=nyt,maxcitenames=2,maxbibnames=99]{biblatex}
+
+\onehalfspacing
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0.15\baselineskip}
+\setlength{\headheight}{14pt}
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{2}
+\emergencystretch=3em
+\sisetup{
+  output-decimal-marker = {,},
+  group-separator = { },
+  detect-all
+}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\addbibresource{references.bib}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=blue
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection.}{0.5em}{}
+\newcommand{\sectionbreak}{\clearpage}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small BDP jako warunkowy katalizator automatyzacji}
+\fancyhead[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\newcommand{\amor}{\texorpdfstring{\href{https://github.com/boombustgroup/amor-fati}{\textit{amor-fati}}}{amor-fati}}
+\newcommand{\ledger}{\texorpdfstring{\href{https://github.com/boombustgroup/amor-fati-ledger}{\texttt{amor-fati-ledger}}}{amor-fati-ledger}}
+\newcommand{\bbg}{\texorpdfstring{\href{https://boombustgroup.com/}{BoomBustGroup}}{BoomBustGroup}}
+\newcommand{\bdp}{BDP}
+\newcommand{\ubi}{UBI}
+
+\title{BDP jako warunkowy katalizator automatyzacji:\\
+od równowagi DSGE do wykonywalnego modelu SFC-ABM gospodarki polskiej}
+\author{Mateusz Maciaszek\\MBA - Ekonomia Menedżerska}
+\date{Wersja robocza, \today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Niniejsza praca analizuje Bezwarunkowy Dochód Podstawowy nie tylko jako instrument redystrybucyjny, lecz jako potencjalny szok menedżerski wpływający na koszt pracy, koszt kapitału, popyt, bilanse firm oraz decyzje o automatyzacji. Punktem odniesienia jest raport Międzynarodowego Funduszu Walutowego \textit{Fiscal Monitor: Tackling Inequality} z 2017 r., który ujmuje BDP przede wszystkim w kategoriach efektywności, redystrybucji i dobrobytu w modelu DSGE lub w analizie statycznej dla Polski. Praca argumentuje, że pytanie menedżerskie dotyczy nie tylko nowej równowagi, lecz przede wszystkim ścieżki przejścia: czy firmy mają płynność, marże, kredyt i warunki popytowe, aby sfinansować reakcję technologiczną. Wykorzystano w tym celu \amor{}, wykonywalny model stock-flow consistent agent-based polskiej gospodarki. Eksperyment BDP dla horyzontu 60 miesięcy i 10 seedów w wariancie centralnym \(\lambda = 0{,}5\) wskazuje, że BDP nie działa jako liniowy akcelerator automatyzacji. Efekt jest warunkowy: adopcja AI/hybrid rośnie do okolic scenariusza \texttt{--bdp 2000}, po czym spada, gdy kanał fiskalno-finansowy zaczyna ograniczać zdolność inwestycyjną sektora prywatnego.
+
+\medskip
+\noindent\textbf{Słowa kluczowe:} Bezwarunkowy Dochód Podstawowy, BDP, UBI, SFC-ABM, modele agentowe, DSGE, automatyzacja, koszt kapitału, płaca rezerwowa, polityka pieniężna, gospodarka polska, ekonomia złożoności.
+
+\medskip
+\noindent\textbf{Kody JEL:} C63, D31, E17, E24, E52, H24, H53, O33.
+
+\medskip
+\noindent\textbf{Kod i dane:} repozytorium \amor{}.
+\newline
+\noindent Gałąź eksperymentalna: \path{mba/basic-income-scenario}; artefakty Monte Carlo: \path{mc/}.
+\end{abstract}
+
+\clearpage
+\pdfbookmark[1]{Spis treści}{toc}
+\tableofcontents
+\clearpage
+
+\input{sections/01_wprowadzenie}
+\input{sections/02_mfw}
+\input{sections/03_luka}
+\input{sections/04_hipoteza}
+\input{sections/05_metodologia}
+\input{sections/06_amor_fati}
+\input{sections/07_eksperyment}
+\input{sections/08_wyniki}
+\input{sections/09_implikacje}
+\input{sections/10_ograniczenia}
+\input{sections/11_wnioski}
+
+\appendix
+\input{sections/a_replikacja}
+\input{sections/b_macierze_sfc}
+
+\printbibliography
+
+\end{document}

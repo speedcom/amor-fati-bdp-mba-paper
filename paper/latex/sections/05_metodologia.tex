@@ -1,0 +1,9 @@
+\section{Metodologia: SFC-ABM jako uzupełnienie DSGE}
+
+Metodologicznie praca opiera się na połączeniu dwóch tradycji: stock-flow consistent modelling oraz agent-based computational economics. Podejście SFC, rozwinięte m.in. przez Godleya i Lavoie \parencite{godley2007}, wymaga, aby każdy przepływ miał drugą stronę księgową, a każdy zasób wynikał z akumulacji przepływów. Z kolei ABM, opisany w tradycji Tesfatsion \parencite{tesfatsion2006}, traktuje gospodarkę jako system heterogenicznych agentów podejmujących ograniczone decyzje i generujących emergentne dynamiki makro.
+
+Połączenie SFC i ABM jest użyteczne tam, gdzie pytanie dotyczy ścieżki przejścia, bilansów i heterogeniczności. W takim modelu gospodarstwa, firmy, banki, państwo i sektor zewnętrzny są powiązane przepływami pieniężnymi. Jeżeli jeden sektor wydaje, inny sektor otrzymuje. Jeżeli państwo zwiększa transfery, musi pojawić się odpowiedni zapis po stronie dochodów gospodarstw, deficytu, długu lub finansowania. Takie ograniczenie nie jest detalem technicznym, lecz warunkiem poprawności eksperymentu.
+
+SFC-ABM nie zastępuje DSGE. DSGE lepiej nadaje się do formalnych porównań dobrobytowych i analizy optymalnych polityk w zdefiniowanych strukturach preferencji oraz oczekiwań. SFC-ABM lepiej nadaje się do analizy płynności, zadłużenia, bankructw, ograniczeń bankowych, kursu walutowego i mikroheterogeniczności firm. Dlatego w niniejszej pracy oba podejścia są traktowane komplementarnie.
+
+Ważna jest także falsyfikowalność. Eksperyment obliczeniowy nie powinien być wyłącznie narracją. Powinien być możliwy do powtórzenia przez zewnętrznego czytelnika. Z tego powodu narzędzie użyte w pracy, \amor{}, jest repozytorium open-source, a scenariusz BDP został uruchomiony przez standardową ścieżkę produkcyjnego pliku JAR.
