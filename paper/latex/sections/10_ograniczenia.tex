@@ -1,8 +1,8 @@
 \section{Ograniczenia, falsyfikacja i dalsza praca}
 
-Wynik tej pracy należy interpretować jako kontrfaktyczny eksperyment obliczeniowy, a nie punktową prognozę makroekonomiczną dla Polski. \amor{} jest modelem gospodarki skalibrowanym do określonego punktu startowego i pozwala badać ścieżki alternatywne względem baseline. Nie mówi, że Polska po wprowadzeniu BDP z pewnością osiągnęłaby dokładnie takie wartości długu, inflacji, kursu albo adopcji AI/hybrid. Mówi coś węższego, ale ważnego: przy zadanym mechanizmie BDP, zadanych regułach zachowań i zadanym wariancie finansowania pojawia się nieliniowa ścieżka, w której kanał fiskalno-finansowy ogranicza zdolność firm do automatyzacji po przekroczeniu wyższego poziomu transferu.
+Wynik tej pracy należy interpretować jako kontrfaktyczny eksperyment obliczeniowy, a nie punktową prognozę makroekonomiczną dla Polski. \amor{} jest modelem gospodarki skalibrowanym do określonego punktu startowego i pozwala badać ścieżki alternatywne względem baseline. Nie mówi, że Polska po wprowadzeniu BDP z pewnością osiągnęłaby dokładnie takie wartości długu, inflacji, kursu albo adopcji AI/hybrid. Mówi coś węższego, ale ważnego: przy zadanym mechanizmie BDP, zadanych regułach zachowań i deficytowym wariancie finansowania pojawia się nieliniowa ścieżka, w której kanał fiskalno-finansowy ogranicza zdolność firm do automatyzacji po przekroczeniu wyższego poziomu transferu.
 
-To rozróżnienie jest kluczowe. Praca nie jest prognozą typu \textit{co stanie się z Polską}. Jest analizą typu \textit{jaki mechanizm może się uruchomić, jeżeli określony impuls fiskalno-dochodowy zostanie wprowadzony do gospodarki o danych ograniczeniach finansowych}. Siła tego podejścia polega na możliwości testowania hipotez, a nie na udawaniu precyzji prognostycznej.
+To rozróżnienie jest kluczowe. Praca nie jest prognozą typu \textit{co stanie się z Polską}. Jest analizą typu \textit{jaki mechanizm może się uruchomić, jeżeli określony impuls fiskalno-dochodowy zostanie wprowadzony do gospodarki o danych ograniczeniach finansowych}. Dlatego poziomy terminalne służą opisowi wewnętrznej ścieżki modelu, natomiast centralna interpretacja opiera się na odchyleniach względem ścieżki bez BDP. Siła tego podejścia polega na możliwości testowania hipotez, a nie na udawaniu precyzji prognostycznej.
 
 \subsection{Status twierdzeń empirycznych w eksperymencie}
 
@@ -21,7 +21,7 @@ BDP zwiększa automatyzację monotonicznie: im wyższy transfer, tym większa ad
 Odrzucone &
 Adopcja rośnie do okolic \texttt{--bdp 2000}, po czym spada przy \texttt{--bdp 2500} i \texttt{--bdp 3000}. Wynik nie jest zgodny z prostą krzywą \textit{więcej BDP, więcej automatyzacji}. \\
 \addlinespace
-BDP może działać jako warunkowy katalizator automatyzacji. &
+Deficytowo finansowany BDP może działać jako warunkowy katalizator automatyzacji. &
 Wspierane &
 W wariancie centralnym istnieje przedział, w którym adopcja AI/hybrid jest wyższa niż w baseline. Efekt zanika po przekroczeniu progu fiskalno-finansowego. \\
 \addlinespace
@@ -48,7 +48,7 @@ Model służy analizie kontrfaktycznej ścieżki i mechanizmów transmisji. Nie 
 
 Pierwsze ograniczenie dotyczy jednostki transferu. Model obejmuje 100 000 agentów reprezentujących gospodarstwa domowe, a nie pełną populację 38 mln osób. Nie zawiera pełnej struktury demograficznej per osoba, per dorosły i per dziecko. Dlatego scenariusz BDP należy interpretować jako skalowany impuls fiskalno-dochodowy dla reprezentatywnego agenta gospodarstwa domowego, a nie jako kompletną mikrosymulację administracyjnego programu transferowego.
 
-Drugie ograniczenie dotyczy finansowania. Obecny wariant jest w praktyce wariantem deficytowym. Nie modeluje alternatywnych ścieżek finansowania, takich jak wzrost VAT, wzrost PIT, składka od dochodu, cięcia wydatków, podatek majątkowy albo podatek od nadzwyczajnych zysków. To istotne, ponieważ struktura finansowania może całkowicie zmienić kanały transmisji. BDP finansowany deficytem przede wszystkim testuje odporność gospodarki na wzrost długu i kosztu kapitału. BDP finansowany podatkami przesunąłby ciężar analizy na podaż pracy, konsumpcję, inwestycje, redystrybucję i zachowania firm w inny sposób.
+Drugie ograniczenie dotyczy finansowania. Wszystkie główne wnioski pracy odnoszą się do wariantu deficytowo finansowanego. Eksperyment nie modeluje alternatywnych ścieżek finansowania, takich jak wzrost VAT, wzrost PIT, składka od dochodu, cięcia wydatków, podatek majątkowy albo podatek od nadzwyczajnych zysków. To istotne, ponieważ struktura finansowania może całkowicie zmienić kanały transmisji. BDP finansowany deficytem przede wszystkim testuje odporność gospodarki na wzrost długu i kosztu kapitału. BDP finansowany podatkami przesunąłby ciężar analizy na podaż pracy, konsumpcję, inwestycje, redystrybucję i zachowania firm w inny sposób.
 
 Trzecie ograniczenie dotyczy porównania z raportem MFW. Raport MFW analizuje konkretne warianty redystrybucyjne i dla Polski opiera się na danych z 2013 r. Niniejsza praca nie replikuje tamtej analizy fiskalnej jeden do jednego. Wykorzystuje MFW jako punkt odniesienia metodologiczny i skaluje pytanie do obecnego modelu gospodarki polskiej. Most między MFW i \amor{} polega więc na zestawieniu pytań badawczych: redystrybucja i dobrobyt w równowadze kontra ścieżka przejścia, inwestycje i bilanse firm.
 
@@ -62,7 +62,7 @@ Trzecie ograniczenie dotyczy sektora publicznego. Model zawiera reguły fiskalne
 
 Czwarte ograniczenie dotyczy zachowań firm. Firmy w \amor{} reagują na koszty, popyt, finansowanie i ograniczenia bilansowe, ale model nie opisuje pełnej strategii konkurencyjnej, jakości zarządzania, przewag organizacyjnych, zdolności wdrożeniowej ani różnic w kulturze innowacji. Dwie firmy z identycznym kosztem kapitału mogą w praktyce podjąć różne decyzje technologiczne, jeśli różnią się kompetencjami operacyjnymi.
 
-Piąte ograniczenie dotyczy liczby seedów i horyzontu. Eksperyment centralny wykorzystuje 10 seedów na poziom BDP i horyzont 60 miesięcy. Jest to wystarczające do analizy mechanizmu i porównania kontrfaktycznych ścieżek w pracy MBA, ale nie zastępuje dużego programu badawczego obejmującego dziesiątki wariantów finansowania, parametrów behawioralnych i szoków zewnętrznych.
+Piąte ograniczenie dotyczy liczby seedów i horyzontu. Eksperyment centralny wykorzystuje 10 seedów na poziom BDP i horyzont 60 miesięcy. Taki zakres pozwala raportować średnie, odchylenia standardowe i parowane przedziały ufności dla głównych kontrfaktów, ale nie zastępuje dużego programu badawczego obejmującego dziesiątki wariantów finansowania, parametrów behawioralnych i szoków zewnętrznych.
 
 \subsection{Dalsza praca}
 

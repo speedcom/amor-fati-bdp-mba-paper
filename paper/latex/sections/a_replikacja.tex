@@ -20,6 +20,13 @@ Patch został sprawdzony względem commita bazowego przez:
 git apply --check patches/amor-fati-bdp-scenario.patch
 \end{verbatim}
 
+Środowisko techniczne użyte do wygenerowania artefaktów było następujące: JDK \texttt{17.0.10}, sbt launcher \texttt{1.10.11}, sbt projektu \texttt{1.11.6} oraz \texttt{scalaVersion = 3.8.2}. Skompilowany plik wykonywalny miał następującą sumę kontrolną SHA-256:
+
+\begin{verbatim}
+c8af1262a0fbeae0185bed5755c615edbc6036da7abd6e097e9443dd1ab43e56
+target/scala-3.8.2/amor-fati.jar
+\end{verbatim}
+
 Punktem odniesienia merytorycznego był produkcyjny baseline modelu, skalibrowany do snapshotu gospodarki Polski na dzień 2026-04-30. Zakres i status tej powierzchni baseline są udokumentowane w następujących artefaktach repozytorium \amor{}:
 
 \begin{itemize}
@@ -48,6 +55,8 @@ MONTHS=60
 JAR=target/scala-3.8.2/amor-fati.jar
 \end{verbatim}
 
+Argument \texttt{SEEDS=10} oznacza seedy \texttt{1}--\texttt{10}. Silnik Monte Carlo uruchamia je równolegle, ale każdy seed ma deterministyczną ścieżkę inicjalizacji i miesięcznych strumieni losowych. Porównania względem baseline są parowane po tym samym seedzie: seed \texttt{1} w scenariuszu \texttt{--bdp 2000} jest porównywany z seedem \texttt{1} w scenariuszu \texttt{--bdp 0}, itd.
+
 Analiza odporności kanału płacy rezerwowej wykorzystuje te same założenia horyzontu i liczby seedów, ale uruchamia siatkę \(\lambda = 0\), \(0{,}25\), \(0{,}5\), \(0{,}75\) i \(1\). Wariant baseline \(\texttt{--bdp 0}\) jest wspólny dla siatki.
 
 Pliki wynikowe zapisano w katalogu \path{mc/}. Dla każdego poziomu powstało dziesięć plików seed CSV oraz agregaty \path{hh}, \path{banks} i \path{firms}. Przykładowy wzorzec nazwy pliku:
@@ -63,6 +72,8 @@ paper/analysis/figures_bdp_sweep.py
 paper/analysis/figures_lambda_robustness.py
 \end{verbatim}
 
+Przedziały ufności w tabeli~\ref{tab:adoption-delta-ci} policzono metodą parowanego bootstrapu na różnicach względem baseline dla tych samych seedów: \(n = 10\), \(B = 10\,000\), seed procedury bootstrapowej \texttt{12345}.
+
 Skrypty zapisują następujące artefakty:
 
 \begin{itemize}
@@ -70,6 +81,7 @@ Skrypty zapisują następujące artefakty:
     \item \path{paper/latex/data/bdp_hh_terminal_summary.csv},
     \item \path{paper/latex/data/bdp_transition_firm_panel.csv},
     \item \path{paper/latex/data/bdp_lambda_robustness_terminal_summary.csv},
+    \item \path{paper/latex/data/checksums.txt} -- manifest SHA-256 dla surowych plików \path{mc/*.csv} oraz agregatów w \path{paper/latex/data/},
     \item rysunki w katalogu \path{paper/latex/figures/}.
 \end{itemize}
 
