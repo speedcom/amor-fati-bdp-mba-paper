@@ -15,7 +15,7 @@ https://github.com/boombustgroup/amor-fati
 Eksperyment BDP opiera sie na upstreamowym `amor-fati` z galezi `main` na commicie:
 
 ```text
-base commit: 2d8b46e5 Clarify banking-sector row semantics (#508)
+base commit: 2d8b46e5064abef9d7a054317028843837b6e1c4
 ```
 
 Kontrfaktyczny mechanizm BDP nie jest czescia bazowego modelu Polski. W tym repo jest zapisany jako patch:
@@ -41,7 +41,7 @@ patches/amor-fati-bdp-scenario.patch
 ├── scripts/
 │   ├── run-central-sweep.sh
 │   └── run-lambda-sweep.sh
-└── paper-project-plan.md
+└── README.md
 ```
 
 ## Budowa PDF
