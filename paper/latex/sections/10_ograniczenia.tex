@@ -1,8 +1,16 @@
 \section{Ograniczenia, falsyfikacja i dalsza praca}
 
-Wynik tej pracy należy interpretować jako kontrfaktyczny eksperyment obliczeniowy, a nie punktową prognozę makroekonomiczną dla Polski. \amor{} jest modelem gospodarki skalibrowanym do określonego punktu startowego i pozwala badać ścieżki alternatywne względem baseline. Nie mówi, że Polska po wprowadzeniu BDP z pewnością osiągnęłaby dokładnie takie wartości długu, inflacji, kursu albo adopcji AI/hybrid. Mówi coś węższego, ale ważnego: przy zadanym mechanizmie BDP, zadanych regułach zachowań i deficytowym wariancie finansowania pojawia się nieliniowa ścieżka, w której kanał fiskalno-finansowy ogranicza zdolność firm do automatyzacji po przekroczeniu wyższego poziomu transferu.
+Wynik tej pracy należy interpretować jako kontrfaktyczny eksperyment obliczeniowy, a nie punktową prognozę makroekonomiczną dla Polski. \amor{} jest modelem gospodarki skalibrowanym do określonego punktu startowego i pozwala badać ścieżki alternatywne względem baseline. Nie mówi, że Polska po wprowadzeniu BDP z pewnością osiągnęłaby dokładnie takie wartości długu, inflacji, kursu albo adopcji AI/hybrid. Mówi coś węższego, ale ważnego: przy zadanym mechanizmie BDP, zadanych regułach zachowań i deficytowym wariancie finansowania pojawia się nieliniowa ścieżka, w której interakcja presji płacowo-rezerwowej i kanału fiskalno-finansowego ogranicza zdolność firm do automatyzacji po przekroczeniu wyższego poziomu transferu.
 
 To rozróżnienie jest kluczowe. Praca nie jest prognozą typu \textit{co stanie się z Polską}. Jest analizą typu \textit{jaki mechanizm może się uruchomić, jeżeli określony impuls fiskalno-dochodowy zostanie wprowadzony do gospodarki o danych ograniczeniach finansowych}. Dlatego poziomy terminalne służą opisowi wewnętrznej ścieżki modelu, natomiast centralna interpretacja opiera się na odchyleniach względem ścieżki bez BDP. Siła tego podejścia polega na możliwości testowania hipotez, a nie na udawaniu precyzji prognostycznej.
+
+\subsection{Diagnostyka baseline}
+
+Najbardziej wymagającym elementem interpretacji jest ścieżka baseline po 60 miesiącach. Model startuje ze skalibrowanego punktu Polski 2026-04-30, ale pierwsze raportowane wartości miesięczne nie są statycznym snapshotem administracyjnym; obejmują już pierwszy miesiąc przepływów i księgowań runtime. Zewnętrzne punkty odniesienia dla inflacji, stopy NBP, finansów publicznych i rachunku bieżącego pochodzą z raportu inflacyjnego NBP, strategii długu Ministerstwa Finansów oraz Article IV MFW dla Polski \parencite{nbp2026inflationReport,mf2025debtStrategy,imf2026polandArticleIV}.
+
+\input{tables/baseline_plausibility}
+
+Tabela~\ref{tab:baseline-plausibility} pokazuje, że baseline jest dobrym punktem startowym dla części zmiennych krótkookresowych, zwłaszcza inflacji, stopy NBP i bezrobocia rejestrowanego. Jednocześnie ścieżka \textit{free-evolution} generuje własny dryf fiskalno-zewnętrzny: dług i deficyt pozostają wysokie, a rachunek bieżący pogarsza się bardziej, niż sugerowałyby zewnętrzne projekcje dla Polski. Ten dryf jest ograniczeniem modelu, nie ukrytym wynikiem BDP. Dlatego poziomy terminalne w sekcji wynikowej należy czytać jako wartości wewnętrzne dla kontrfaktycznej ścieżki, a główną interpretację opierać na deltach względem baseline uruchomionego z tego samego punktu startowego i dla tych samych seedów.
 
 \subsection{Status twierdzeń empirycznych w eksperymencie}
 
@@ -23,7 +31,7 @@ Adopcja rośnie do okolic \texttt{--bdp 2000}, po czym spada przy \texttt{--bdp 
 \addlinespace
 Deficytowo finansowany BDP może działać jako warunkowy katalizator automatyzacji. &
 Wspierane &
-W wariancie centralnym istnieje przedział, w którym adopcja AI/hybrid jest wyższa niż w baseline. Efekt zanika po przekroczeniu progu fiskalno-finansowego. \\
+W wariancie centralnym istnieje przedział, w którym adopcja AI/hybrid jest wyższa niż w baseline. Efekt zanika po przekroczeniu progu wynikającego z jednoczesnej presji płacowo-rezerwowej i ograniczeń fiskalno-finansowych. \\
 \addlinespace
 Kanał płacy rezerwowej samodzielnie tłumaczy wynik. &
 Niewspierane &
@@ -33,9 +41,13 @@ Nieliniowość wyniku wynika z załamania gospodarstw domowych. &
 Niewspierane &
 Panel HH pokazuje stabilne metryki dystrybucyjne, zerową raportowaną metrykę bankructw gospodarstw i poprawę płynności gospodarstw wraz z BDP. \\
 \addlinespace
-Kanał fiskalno-finansowy ogranicza zdolność firm do finansowania CapEx. &
+Sam kanał fiskalno-finansowy wystarcza do ograniczenia CapEx. &
+Niewspierane &
+Dla \(\lambda = 0\) deficyt i dług rosną, ale adopcja AI/hybrid oraz inwestycje prywatne pozostają blisko baseline. Sam impuls fiskalny nie tworzy więc odwróconego U. \\
+\addlinespace
+Interakcja kanału płacowo-rezerwowego i fiskalno-finansowego ogranicza zdolność firm do finansowania CapEx. &
 Wspierane &
-Wraz z wysokim BDP rosną dług/PKB, deficyt/PKB, koszt długu publicznego i koszt długu korporacyjnego, a inwestycje prywatne/PKB oraz nominalny strumień inwestycji prywatnych spadają. \\
+W wariancie centralnym i przy wyższych \(\lambda\) presja automatyzacyjna rośnie równolegle z pogorszeniem warunków finansowania. Wtedy inwestycje prywatne/PKB oraz nominalny strumień inwestycji prywatnych spadają, a adopcja AI/hybrid załamuje się po lokalnym maksimum. \\
 \addlinespace
 Eksperyment dowodzi, że realna Polska po BDP osiągnęłaby dokładnie takie wartości makroekonomiczne. &
 Odrzucone &
