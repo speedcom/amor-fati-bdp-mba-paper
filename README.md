@@ -12,7 +12,7 @@ Silnik modelu znajduje sie w:
 
 https://github.com/boombustgroup/amor-fati
 
-Eksperyment BDP opiera sie na upstreamowym `amor-fati` po merge PR #508:
+Eksperyment BDP opiera sie na upstreamowym `amor-fati` z galezi `main` na commicie:
 
 ```text
 base commit: 2d8b46e5 Clarify banking-sector row semantics (#508)
