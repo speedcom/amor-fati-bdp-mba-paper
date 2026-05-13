@@ -42,7 +42,7 @@ Wynik wariantu centralnego jest nieliniowy. Jak pokazuje rysunek~\ref{fig:bdp-ad
 
 \input{tables/adoption_delta_ci}
 
-Przedziały ufności z parowanego bootstrapu pokazują, że lokalny wzrost adopcji przy \texttt{--bdp 2000} oraz spadek względem baseline przy \texttt{--bdp 2500} i \texttt{--bdp 3000} nie są wyłącznie artefaktem pojedynczego seeda. Nie należy natomiast nadinterpretować dokładnej pozycji maksimum między \texttt{--bdp 1500} i \texttt{--bdp 2000}: różnice w pobliżu szczytu są mniejsze niż różnica między przedziałem katalitycznym a wysokimi poziomami transferu.
+Przedziały ufności z parowanego bootstrapu pokazują, że lokalny wzrost adopcji przy \texttt{--bdp 2000} oraz spadek względem baseline przy \texttt{--bdp 2500} i \texttt{--bdp 3000} nie są wyłącznie artefaktem pojedynczego seeda. Nie należy natomiast nadinterpretować dokładnej pozycji maksimum między \texttt{--bdp 1500} i \texttt{--bdp 2000}: różnice w pobliżu szczytu są mniejsze niż różnica między zakresem umiarkowanego przyspieszenia adopcji a wysokimi poziomami transferu.
 
 \begin{figure}[htbp]
   \centering
@@ -55,7 +55,7 @@ Przedziały ufności z parowanego bootstrapu pokazują, że lokalny wzrost adopc
 
 Analiza odporności pokazuje, że wynik nie jest czysto mechanicznym skutkiem samego transferu. Przy \(\lambda = 0\), czyli przy braku przełożenia BDP na płacę rezerwową, adopcja AI/hybrid pozostaje blisko baseline i nie tworzy wyraźnej krzywej akceleracji. Przy \(\lambda = 0{,}25\) adopcja rośnie łagodnie wraz z BDP, ale nie pojawia się gwałtowny próg. Oznacza to, że sam kanał popytowo-fiskalny nie wystarcza do mocnej wersji hipotezy.
 
-Najbardziej informacyjny jest wariant centralny \(\lambda = 0{,}5\). Pokazuje on przedział katalityczny: adopcja rośnie z 8,97\% w baseline do 10,19\% przy \texttt{--bdp 2000}, a następnie spada do 8,42\% przy \texttt{--bdp 2500} i 8,20\% przy \texttt{--bdp 3000}. Warianty \(\lambda = 0{,}75\) i \(\lambda = 1\) przesuwają próg w lewo: lokalny szczyt pojawia się już przy \texttt{--bdp 1000}, a wyższe poziomy transferu obniżają inwestycje prywatne i adopcję.
+Najbardziej informacyjny jest wariant centralny \(\lambda = 0{,}5\). Pokazuje on zakres umiarkowanego przyspieszenia adopcji: adopcja rośnie z 8,97\% w baseline do 10,19\% przy \texttt{--bdp 2000}, a następnie spada do 8,42\% przy \texttt{--bdp 2500} i 8,20\% przy \texttt{--bdp 3000}. Warianty \(\lambda = 0{,}75\) i \(\lambda = 1\) przesuwają próg w lewo: lokalny szczyt pojawia się już przy \texttt{--bdp 1000}, a wyższe poziomy transferu obniżają inwestycje prywatne i adopcję.
 
 Wniosek z analizy odporności jest jednoznaczny: BDP może być katalizatorem automatyzacji tylko w przedziale pośrednim. Próg absorpcji wymaga jednoczesnej obecności presji płacowo-rezerwowej i kanału fiskalno-finansowego. Przy \(\lambda = 0\) rośnie deficyt i dług, ale adopcja AI/hybrid pozostaje blisko baseline; sam kanał fiskalny nie tworzy więc odwróconego U. Jeśli transfer wpływa na płacę rezerwową zbyt mocno, kanał kosztu pracy, inwestycji i finansowania zaczyna dławić zdolność firm do ucieczki technologicznej. Hipoteza ma więc charakter warunkowy, a nie monotoniczny.
 
