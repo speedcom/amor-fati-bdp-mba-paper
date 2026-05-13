@@ -15,19 +15,19 @@ Ten wybór projektowy ma dwa skutki. Po pierwsze, ogranicza klasę błędów jed
 
 Ważne jest precyzyjne rozróżnienie poziomów zaufania. Formalnie weryfikowany jest model referencyjny w \path{src/main/scala-stainless/Verified.scala}, sprawdzany przez Stainless oraz solver Z3. Dokumentacja \path{modules/ledger/docs/verification.md} wskazuje następujące własności tego modelu:
 
-\begin{table}[htbp]
+\begin{table}[H]
 \centering
 \scriptsize
 \begin{tabularx}{\textwidth}{@{}L{0.30\textwidth}X@{}}
 \toprule
 \textbf{Własność} & \textbf{Znaczenie dla eksperymentu SFC-ABM} \\
 \midrule
-Konserwacja przepływu & suma sald dwóch rachunków dotkniętych przepływem pozostaje niezmieniona po jego wykonaniu \\
+Zachowanie sumy sald & suma sald dwóch rachunków dotkniętych przepływem pozostaje niezmieniona po jego wykonaniu \\
 Warunek ramowy & rachunki nieuczestniczące w przepływie pozostają bez zmian \\
-Aplikacja sekwencyjna & lista przepływów zachowuje własności konserwacji przy iteracyjnym wykonaniu \\
+Wykonanie sekwencyjne & lista przepływów zachowuje sumę sald przy iteracyjnym wykonaniu \\
 Dokładność dystrybucji & dystrybucja z resztą dokładnie sumuje się do kwoty źródłowej, bez utraty jednostek pieniężnych \\
 Komutatywność przepływów rozłącznych & przepływy dotyczące rozłącznych rachunków dają ten sam wynik niezależnie od kolejności \\
-Refinement runtime & model \texttt{Map[Int, Long]} jest powiązany z referencją \texttt{BigInt} pod jawnymi warunkami braku przepełnienia \\
+Zgodność wykonania & model \texttt{Map[Int, Long]} jest powiązany z referencją \texttt{BigInt} pod jawnymi warunkami braku przepełnienia \\
 \bottomrule
 \end{tabularx}
 \caption{Wybrane własności referencyjnego modelu ledgerowego weryfikowane przez Stainless/Z3.}
