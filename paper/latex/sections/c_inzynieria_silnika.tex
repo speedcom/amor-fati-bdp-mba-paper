@@ -42,22 +42,22 @@ Warstwa agentowa \amor{} jest zapisana jako zbiór modułów z jawnym stanem i c
 
 Po pierwsze, firmy nie są jedną reprezentatywną firmą. Mają stan technologiczny, kapitał, zapasy, zatrudnienie, gotówkę, dług i powody bankructwa. W kodzie istnieje m.in. przyczyna \texttt{AiDebtTrap}, czyli przypadek, w którym presja inwestycyjna i finansowanie technologii mogą doprowadzić firmę do bariery bilansowej. Po drugie, sektor bankowy nie jest pojedynczym agregatem. Model operuje na sześciu archetypach banków komercyjnych oraz agregacie \texttt{Others}; banki mają kapitał, NPL, LCR/NSFR, staging ECL zgodny z logiką IFRS 9 oraz możliwość upadłości. Po trzecie, ryzyko systemowe nie jest dopisane wyłącznie jako spread. Mechanizmy \texttt{InterbankContagion} i \texttt{DepositMobility} modelują straty kontrahentów, hoarding płynności oraz przepływ depozytów między bankami.
 
-Model zawiera również sześciosetorowy mechanizm input-output dla popytu pośredniego. Macierz technicznych współczynników Leontiefa \(A\) określa, jaka część zakupów pośrednich danego sektora trafia do pozostałych sektorów, a przepływy są rozliczane jako transfery depozytowe między firmami. Są one zero-sum na poziomie firm: koszt zakupu inputów pośrednich jednej firmy jest przychodem dostawców w innych sektorach. W obecnej wersji macierz input-output jest traktowana jako sześciosetorowy bridge/prior skalibrowany do runtime modelu, a nie jako bezpośrednia kopia pełnej empirycznej tablicy input-output GUS dla 2026 r.; dlatego służy do modelowania powiązań produkcyjnych między sektorami oraz przenoszenia napięć popytowych między nimi, a nie do samodzielnej analizy strukturalnej input-output.
+Model zawiera również mechanizm input-output dla sześciu sektorów i popytu pośredniego. Macierz technicznych współczynników Leontiefa \(A\) określa, jaka część zakupów pośrednich danego sektora trafia do pozostałych sektorów, a przepływy są rozliczane jako transfery depozytowe między firmami. Są one zero-sum na poziomie firm: koszt zakupu inputów pośrednich jednej firmy jest przychodem dostawców w innych sektorach. W obecnej wersji macierz input-output jest traktowana jako pomost modelowy dla sześciu sektorów, skalibrowany do runtime modelu, a nie jako bezpośrednia kopia pełnej empirycznej tablicy input-output GUS dla 2026 r.; dlatego służy do modelowania powiązań produkcyjnych między sektorami oraz przenoszenia napięć popytowych między nimi, a nie do samodzielnej analizy strukturalnej input-output.
 
 Ta architektura jest ważna dla interpretacji BDP. Jeżeli transfer zmienia płacę rezerwową, popyt, deficyt, koszt kapitału i kurs walutowy, to odpowiedź firm nie jest jedną funkcją agregatową. Jest wynikiem lokalnych decyzji, ograniczeń bilansowych, dostępu do finansowania i stanu technologicznego. Dzięki temu wynik nieliniowy nie musi być założony z góry. Może wyłonić się z interakcji kanałów.
 
-\subsection{Powierzchnie walidacji i prowencja kalibracji}
+\subsection{Powierzchnie walidacji oraz źródła i status kalibracji}
 
 \amor{} rozdziela co najmniej trzy powierzchnie kontroli. Pierwsza to walidacja księgowa: czy przepływy i zasoby zachowują identyczności SFC. Druga to artefakty macierzy SFC: Balance Sheet Matrix, Transactions Flow Matrix, stock-flow reconciliation oraz mapping z wierszy symbolicznych do mechanizmów runtime. Trzecia to walidacja empiryczna i kalibracyjna: czy wartości startowe, parametry i ścieżki modelu mają jawne źródła, statusy i ograniczenia.
 
-Rejestr kalibracji \path{docs/calibration-register.md} jest generowany z typowanego rejestru prowencji. Nie jest listą luźnych przypisów, lecz tabelą parametrów z wartością, jednostką, właścicielem implementacyjnym, źródłem, transformacją i statusem. W bieżącej wersji rejestr wskazuje następujące liczby statusów:
+Rejestr kalibracji \path{docs/calibration-register.md} jest generowany z typowanego rejestru źródeł i statusów parametrów. Nie jest listą luźnych przypisów, lecz tabelą parametrów z wartością, jednostką, właścicielem implementacyjnym, źródłem, transformacją i statusem. W bieżącej wersji rejestr wskazuje następujące liczby statusów:
 
 \begin{table}[htbp]
 \centering
 \scriptsize
 \begin{tabular}{@{}lr@{}}
 \toprule
-\textbf{Status prowencji} & \textbf{Liczba parametrów} \\
+\textbf{Status kalibracji} & \textbf{Liczba parametrów} \\
 \midrule
 \texttt{EMPIRICAL} & 36 \\
 \texttt{EMPIRICAL\_TRANSFORMED} & 17 \\
@@ -69,10 +69,10 @@ Rejestr kalibracji \path{docs/calibration-register.md} jest generowany z typowan
 \texttt{UNKNOWN\_SOURCE} & 0 \\
 \bottomrule
 \end{tabular}
-\caption{Statusy prowencji kalibracji w produkcyjnym baseline \amor{} według rejestru kalibracji.}
+\caption{Źródła i status kalibracji w produkcyjnym baseline \amor{} według rejestru kalibracji.}
 \label{tab:calibration-provenance}
 \end{table}
 
 Takie oznaczenia są istotne metodologicznie. Model nie ukrywa, które parametry są empiryczne, które są transformacją danych instytucjonalnych, które są założeniem strukturalnym, a które są współczynnikami dostrojonymi i wymagającymi dalszej walidacji. To wzmacnia falsyfikowalność eksperymentu BDP: zewnętrzny badacz może nie tylko powtórzyć seedy, ale także wskazać, które parametry powinny być przedmiotem alternatywnej kalibracji lub analizy wrażliwości.
 
-W tym sensie \amor{} jest nie tylko modelem ekonomicznym, ale także infrastrukturą replikowalnego sporu o mechanizmy. Twierdzenie „BDP jest warunkowym katalizatorem automatyzacji” nie jest zakończeniem analizy. Jest wynikiem jednego jawnego patcha, jednej jawnej siatki parametrów i jednego zestawu seedów na tle większego silnika, który można sklonować, zmodyfikować i uruchomić ponownie.
+W tym sensie \amor{} jest nie tylko modelem ekonomicznym, ale także narzędziem do powtarzalnych eksperymentów kontrfaktycznych. Twierdzenie „BDP jest warunkowym katalizatorem automatyzacji” nie jest zakończeniem analizy. Jest wynikiem jednego jawnego patcha, jednej jawnej siatki parametrów i jednego zestawu seedów na tle większego silnika, którego kod można sklonować, zmodyfikować i uruchomić ponownie.
