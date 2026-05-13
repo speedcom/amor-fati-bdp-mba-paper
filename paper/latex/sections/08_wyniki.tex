@@ -68,9 +68,15 @@ Wniosek z analizy odporności jest jednoznaczny: BDP może być katalizatorem au
   \label{fig:firm-transition-panel}
 \end{figure}
 
-Rysunek~\ref{fig:firm-transition-panel} pokazuje, co dzieje się pod punktem terminalnym. W wariancie \texttt{--bdp 2000} adopcja AI/hybrid rośnie silniej niż w baseline, ale dzieje się to przy wyraźnie słabszej ścieżce inwestycji prywatnych/PKB. Wysoki wariant \texttt{--bdp 3000} pokazuje, że większa liczba firm nie oznacza automatycznie większej automatyzacji. Liczba żyjących firm rośnie, ale inwestycje prywatne/PKB pozostają nisko, a adopcja AI/hybrid jest słabsza niż przy \texttt{--bdp 2000}.
+Rysunek~\ref{fig:firm-transition-panel} pokazuje, co dzieje się pod punktem terminalnym. W wariancie \texttt{--bdp 2000} adopcja AI/hybrid rośnie silniej niż w baseline, ale dzieje się to przy wyraźnie słabszej ścieżce inwestycji prywatnych/PKB. Wysoki wariant \texttt{--bdp 3000} pokazuje, że większa liczba firm nie oznacza automatycznie większej automatyzacji. Liczba aktywnych firm rośnie, ale inwestycje prywatne/PKB pozostają nisko, a adopcja AI/hybrid jest słabsza niż przy \texttt{--bdp 2000}.
 
 Nie jest to wyłącznie efekt wyższego mianownika PKB. W danych terminalnych spada także nominalny strumień prywatnych inwestycji brutto: z około 44,3 mld PLN miesięcznie w baseline do około 37,5 mld PLN przy \texttt{--bdp 2000} i 33,9 mld PLN przy \texttt{--bdp 3000}. W modelu inwestycja firmy jest ograniczana gotówką oraz możliwością pozyskania finansowania zewnętrznego. Wysoki BDP zwiększa deficyt i dług publiczny, podnosi rentowności obligacji publicznych oraz koszt długu korporacyjnego, a równocześnie przez kanał płacy rezerwowej i kursu walutowego pogarsza część kosztów firm. Presja automatyzacyjna rośnie, ale firmy mają mniej przestrzeni bilansowej, aby tę reakcję sfinansować. Ograniczeniem nie jest więc sama liczba podmiotów gospodarczych, lecz zdolność firm do finansowania inwestycji technologicznych.
+
+\input{tables/firm_demography_size}
+
+Dane o demografii firm doprecyzowują ten wynik. Nie wskazują one na gwałtowną konsolidację rynku przez większe podmioty. W wariancie centralnym \(\lambda = 0{,}5\) pojawia się raczej nieliniowa zmiana struktury firm. Do poziomu \texttt{--bdp 2000} spada zarówno liczba nowych firm, jak i liczba firm kończących działalność: z 98,3 nowych firm i 83,6 firm kończących działalność miesięcznie w baseline do 21,5 nowych firm i 4,3 firm kończących działalność miesięcznie. Jednocześnie udział mikrofirm spada z 90,87\% do 88,03\%, a udział firm małych rośnie z 8,23\% do 10,88\%. Można to interpretować jako zamrożenie selekcji rynkowej połączone z przejściem części firm poza mikrosegment.
+
+Powyżej \texttt{--bdp 2500} wzorzec się odwraca. Liczba firm rośnie do około 11,5 tys., ale wzrost ten odbywa się niemal wyłącznie w segmencie mikrofirm: ich udział wynosi 94,41\% przy \texttt{--bdp 2500} i 96,56\% przy \texttt{--bdp 3000}. Udział firm małych spada natomiast do 2,66\%. To nie jest obraz przejęcia rynku przez większych graczy. Bardziej prawdopodobna interpretacja to bariera skalowania i technologicznego dojrzewania sektora: nowe podmioty mogą powstawać jako mikrofirmy, ale przy wysokim koszcie kapitału i niższej inwestycji prywatnej trudniej im przejść do większych klas wielkości oraz sfinansować automatyzację.
 
 \subsection{Płaca rezerwowa}
 
