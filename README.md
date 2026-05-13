@@ -1,10 +1,10 @@
-# Amor Fati BDP MBA Paper
+# BDP jako warunkowy katalizator automatyzacji
 
-Dedykowane repozytorium pracy MBA z ekonomii menedzerskiej:
+**Od równowagi DSGE do wykonywalnego modelu SFC-ABM gospodarki polskiej**
 
-**BDP jako warunkowy katalizator automatyzacji: od rownowagi DSGE do wykonywalnego modelu SFC-ABM gospodarki polskiej**.
+Dedykowane repozytorium pracy MBA z Ekonomii Menedżerskiej.
 
-Repo zawiera warstwe paperowa i replikacyjna eksperymentu BDP. Nie zawiera pelnej kopii silnika `amor-fati`.
+Repo zawiera warstwę paperową i replikacyjną eksperymentu BDP. Nie zawiera pełnej kopii silnika `amor-fati`.
 
 ## Relacja do `amor-fati`
 
