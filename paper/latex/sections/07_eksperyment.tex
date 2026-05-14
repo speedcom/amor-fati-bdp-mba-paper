@@ -28,7 +28,7 @@ java -jar target/scala-3.8.2/amor-fati.jar 10 robust-l075-bdp-2000 \
   --bdp 2000 --bdp-lambda 0.75
 \end{verbatim}
 
-Jednostka transferu wymaga doprecyzowania. Poziom \texttt{--bdp 2000} nie oznacza literalnie 2000 PLN miesięcznie na każdego mieszkańca Polski. Oznacza miesięczny transfer na agenta reprezentującego gospodarstwo domowe w skalowanej populacji modelu. Dlatego przeliczenie na język decydenta publicznego powinno wykorzystywać dodatkowy miesięczny \texttt{SocialTransferSpend} względem baseline, podzielony przez populację referencyjną 38 mln osób, a nie proste dzielenie liczby mieszkańców przez liczbę agentów.
+Jednostka transferu wymaga doprecyzowania. Poziom \texttt{--bdp 2000} nie oznacza literalnie 2000 PLN miesięcznie na każdego mieszkańca Polski. Oznacza miesięczny transfer na agenta reprezentującego gospodarstwo domowe w skalowanej populacji modelu. Dlatego przeliczenie na język decydenta publicznego powinno wykorzystywać dodatkowy miesięczny strumień transferów społecznych względem baseline, podzielony przez populację referencyjną 38 mln osób, a nie proste dzielenie liczby mieszkańców przez liczbę agentów.
 
 Pełny schemat wynikowy modelu jest znacznie szerszy niż zakres tej pracy i ma charakter techniczny: służy replikacji uruchomień Monte Carlo, a nie jako tekst ekonomiczny. Dlatego w analizie raportuję tylko wskaźniki, które bezpośrednio odpowiadają kanałom transmisji hipotezy.
 
