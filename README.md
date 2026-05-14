@@ -1,5 +1,7 @@
 # BDP jako warunkowy katalizator automatyzacji
 
+[Paper (PDF)](paper/latex/esej_mba.pdf)
+
 **Od równowagi DSGE do wykonywalnego modelu SFC-ABM gospodarki polskiej**
 
 Dedykowane repozytorium pracy MBA z Ekonomii Menedżerskiej.
