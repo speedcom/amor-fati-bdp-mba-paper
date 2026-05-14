@@ -268,7 +268,7 @@ def pct_pm(row: dict[str, float], metric: str) -> str:
 def write_terminal_latex_tables(summary: list[dict[str, float]]) -> None:
     path = TABLES_DIR / "terminal_results.tex"
     lines = [
-        r"\begin{table}[htbp]",
+        r"\begin{table}[H]",
         r"\centering",
         r"\scriptsize",
         r"\caption{Wariant centralny: metryki firmowe i rynku pracy po 10 seedach}",
@@ -292,7 +292,7 @@ def write_terminal_latex_tables(summary: list[dict[str, float]]) -> None:
             r"\end{tabular}",
             r"\end{table}",
             "",
-            r"\begin{table}[htbp]",
+            r"\begin{table}[H]",
             r"\centering",
             r"\scriptsize",
             r"\caption{Wariant centralny: metryki makro-fiskalne po 10 seedach}",
