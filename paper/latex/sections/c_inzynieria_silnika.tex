@@ -75,4 +75,10 @@ Rejestr kalibracji \path{docs/calibration-register.md} jest generowany z typowan
 
 Takie oznaczenia są istotne metodologicznie. Model nie ukrywa, które parametry są empiryczne, które są transformacją danych instytucjonalnych, które są założeniem strukturalnym, a które są współczynnikami dostrojonymi i wymagającymi dalszej walidacji. To wzmacnia falsyfikowalność eksperymentu BDP: zewnętrzny badacz może nie tylko powtórzyć seedy, ale także wskazać, które parametry powinny być przedmiotem alternatywnej kalibracji lub analizy wrażliwości.
 
+\subsection{Koszt obliczeniowy i replikowalność}
+
+Wydajność nie jest w tej pracy osobnym wynikiem naukowym, lecz warunkiem praktycznej replikowalności. Istotne jest to, że eksperyment BDP nie wymaga klastra ani wielodniowej kolejki obliczeniowej: przebiegi użyte do przygotowania wyników mają koszt rzędu minut na lokalnej maszynie autora. Jednocześnie nie traktuję tego czasu jako porównywalnego benchmarku wobec innych modeli SFC-ABM, ponieważ zależy on od liczby agentów, horyzontu, liczby seedów, zapisu artefaktów, implementacji wejścia-wyjścia, wersji JVM i sprzętu.
+
+Część tej własności wynika z architektury wykonawczej. Warstwa ledgerowa ma ścieżkę imperatywną opartą na tablicach \texttt{Array[Long]} grupowanych według pary sektor--aktywo, a batchowane przepływy ograniczają koszt alokacji i sprzyjają lokalności pamięci. Jest to data-oriented design podporządkowany powtarzalnemu wykonywaniu dużej liczby prostych przepływów księgowych, a nie abstrakcyjny interpreter oparty na słownikach dla każdej transakcji. Granica twierdzenia pozostaje jednak ważna: jest to cecha inżynieryjna wspierająca replikację i iteracyjne eksperymenty kontrfaktyczne, nie niezależny wynik benchmarkowy całego silnika.
+
 W tym sensie \amor{} jest nie tylko modelem ekonomicznym, ale także narzędziem do powtarzalnych eksperymentów kontrfaktycznych. Twierdzenie „BDP jest warunkowym katalizatorem automatyzacji” nie jest zakończeniem analizy. Jest wynikiem jednego jawnego patcha, jednej jawnej siatki parametrów i jednego zestawu seedów na tle większego silnika, którego kod można sklonować, zmodyfikować i uruchomić ponownie.
