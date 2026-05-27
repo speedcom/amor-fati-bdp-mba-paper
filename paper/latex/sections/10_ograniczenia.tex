@@ -1,16 +1,16 @@
 \section{Ograniczenia, falsyfikacja i dalsza praca}
 
-Wynik tej pracy należy interpretować jako kontrfaktyczny eksperyment obliczeniowy, a nie punktową prognozę makroekonomiczną dla Polski. \amor{} jest modelem gospodarki skalibrowanym do określonego punktu startowego i pozwala badać ścieżki alternatywne względem baseline. Nie mówi, że Polska po wprowadzeniu BDP z pewnością osiągnęłaby dokładnie takie wartości długu, inflacji, kursu albo adopcji AI/hybrid. Mówi coś węższego, ale ważnego: przy zadanym mechanizmie BDP, zadanych regułach zachowań i deficytowym wariancie finansowania pojawia się nieliniowa ścieżka, w której interakcja presji płacowo-rezerwowej i kanału fiskalno-finansowego ogranicza zdolność firm do automatyzacji po przekroczeniu wyższego poziomu transferu.
+Wynik tej pracy należy interpretować jako kontrfaktyczny eksperyment obliczeniowy, a nie punktową prognozę makroekonomiczną dla Polski. \amor{} jest modelem gospodarki skalibrowanym do określonego punktu startowego i pozwala badać ścieżki alternatywne względem wariantu bez BDP. Nie mówi, że Polska po wprowadzeniu BDP z pewnością osiągnęłaby dokładnie takie wartości długu, inflacji, kursu albo adopcji AI/hybrid. Mówi coś węższego, ale ważnego: przy zadanym mechanizmie BDP, zadanych regułach zachowań i deficytowym wariancie finansowania pojawia się nieliniowa ścieżka, w której interakcja presji płacowo-rezerwowej i kanału fiskalno-finansowego ogranicza zdolność firm do automatyzacji po przekroczeniu wyższego poziomu transferu.
 
 To rozróżnienie jest kluczowe. Praca nie jest prognozą typu \textit{co stanie się z Polską}. Jest analizą typu \textit{jaki mechanizm może się uruchomić, jeżeli określony impuls fiskalno-dochodowy zostanie wprowadzony do gospodarki o danych ograniczeniach finansowych}. Dlatego poziomy terminalne służą opisowi wewnętrznej ścieżki modelu, natomiast centralna interpretacja opiera się na odchyleniach względem ścieżki bez BDP. Siła tego podejścia polega na możliwości testowania hipotez, a nie na udawaniu precyzji prognostycznej.
 
-\subsection{Diagnostyka baseline}
+\subsection{Diagnostyka wariantu bez BDP}
 
-Najbardziej wymagającym elementem interpretacji jest ścieżka baseline po 60 miesiącach. Model startuje ze skalibrowanego punktu Polski 2026-04-30, ale pierwsze raportowane wartości miesięczne nie są statycznym snapshotem administracyjnym; obejmują już pierwszy miesiąc przepływów i księgowań runtime. Zewnętrzne punkty odniesienia dla inflacji, stopy NBP, bezrobocia, finansów publicznych, rachunku bieżącego i inwestycji pochodzą z raportu inflacyjnego NBP, uchwały RPP z 4 marca 2026 r., tablic GUS, strategii długu Ministerstwa Finansów oraz Article IV MFW dla Polski \parencite{nbp2026inflationReport,nbp2026rppResolution,gus2026unemploymentMarch,gus2026gdp2025Preliminary,mf2025debtStrategy,imf2026polandArticleIV}.
+Najbardziej wymagającym elementem interpretacji jest ścieżka bez BDP po 60 miesiącach. Model startuje ze skalibrowanego punktu Polski 2026-04-30, ale pierwsze raportowane wartości miesięczne nie są statycznym punktem administracyjnym; obejmują już pierwszy miesiąc przepływów i księgowań w trakcie wykonania modelu. Zewnętrzne punkty odniesienia dla inflacji, stopy NBP, bezrobocia, finansów publicznych, rachunku bieżącego i inwestycji pochodzą z raportu inflacyjnego NBP, uchwały RPP z 4 marca 2026 r., tablic GUS, strategii długu Ministerstwa Finansów oraz Article IV MFW dla Polski \parencite{nbp2026inflationReport,nbp2026rppResolution,gus2026unemploymentMarch,gus2026gdp2025Preliminary,mf2025debtStrategy,imf2026polandArticleIV}.
 
 \input{tables/baseline_plausibility}
 
-Tabela~\ref{tab:baseline-plausibility} pokazuje, że baseline jest dobrym punktem startowym dla części zmiennych krótkookresowych, zwłaszcza inflacji, stopy NBP i bezrobocia rejestrowanego. Jednocześnie ścieżka \textit{free-evolution} generuje własny dryf fiskalno-zewnętrzny: dług i deficyt pozostają wysokie, a rachunek bieżący pogarsza się bardziej, niż sugerowałyby zewnętrzne projekcje dla Polski. Ten dryf jest ograniczeniem modelu, nie ukrytym wynikiem BDP. Dotyczy to szczególnie rachunku bieżącego: jego poziomu bezwzględnego nie należy traktować jako prognozy, natomiast w eksperymencie interpretowana jest delta względem tej samej ścieżki bez BDP i tych samych seedów. Podobnie inwestycje prywatne w modelu są węższą zmienną niż GUS-owskie nakłady brutto na środki trwałe ogółem. Dlatego poziomy terminalne w sekcji wynikowej należy czytać jako wartości wewnętrzne dla kontrfaktycznej ścieżki, a główną interpretację opierać na deltach względem baseline uruchomionego z tego samego punktu startowego i dla tych samych seedów.
+Tabela~\ref{tab:baseline-plausibility} pokazuje, że wariant bez BDP jest dobrym punktem startowym dla części zmiennych krótkookresowych, zwłaszcza inflacji, stopy NBP i bezrobocia rejestrowanego. Jednocześnie swobodna ścieżka modelu generuje własny dryf fiskalno-zewnętrzny: dług i deficyt pozostają wysokie, a rachunek bieżący pogarsza się bardziej, niż sugerowałyby zewnętrzne projekcje dla Polski. Ten dryf jest ograniczeniem modelu, nie ukrytym wynikiem BDP. Dotyczy to szczególnie rachunku bieżącego: jego poziomu bezwzględnego nie należy traktować jako prognozy, natomiast w eksperymencie interpretowana jest różnica względem tej samej ścieżki bez BDP i tych samych ziaren losowania. Podobnie inwestycje prywatne w modelu są węższą zmienną niż GUS-owskie nakłady brutto na środki trwałe ogółem. Dlatego poziomy terminalne w sekcji wynikowej należy czytać jako wartości wewnętrzne dla kontrfaktycznej ścieżki, a główną interpretację opierać na różnicach względem wariantu bez BDP uruchomionego z tego samego punktu startowego i dla tych samych ziaren losowania.
 
 \subsection{Status twierdzeń empirycznych w eksperymencie}
 
@@ -27,11 +27,11 @@ Tabela~\ref{tab:claim-status} porządkuje, co eksperyment wspiera, czego nie wsp
 \midrule
 BDP zwiększa automatyzację monotonicznie: im wyższy transfer, tym większa adopcja AI/hybrid. &
 Odrzucone &
-Adopcja rośnie do okolic \texttt{--bdp 2000}, po czym spada przy \texttt{--bdp 2500} i \texttt{--bdp 3000}. Wynik nie jest zgodny z prostą krzywą \textit{więcej BDP, więcej automatyzacji}. \\
+Adopcja rośnie do okolic BDP 2000 PLN, po czym spada przy BDP 2500 PLN i BDP 3000 PLN. Wynik nie jest zgodny z prostą krzywą \textit{więcej BDP, więcej automatyzacji}. \\
 \addlinespace
 Deficytowo finansowany BDP może działać jako warunkowy katalizator automatyzacji. &
 Wspierane &
-W wariancie centralnym istnieje przedział, w którym adopcja AI/hybrid jest wyższa niż w baseline. Efekt zanika po przekroczeniu progu wynikającego z jednoczesnej presji płacowo-rezerwowej i ograniczeń fiskalno-finansowych. \\
+W wariancie centralnym istnieje przedział, w którym adopcja AI/hybrid jest wyższa niż w wariancie bez BDP. Efekt zanika po przekroczeniu progu wynikającego z jednoczesnej presji płacowo-rezerwowej i ograniczeń fiskalno-finansowych. \\
 \addlinespace
 Kanał płacy rezerwowej samodzielnie tłumaczy wynik. &
 Niewspierane &
@@ -43,7 +43,7 @@ Panel HH pokazuje stabilne metryki dystrybucyjne, zerową raportowaną metrykę 
 \addlinespace
 Sam kanał fiskalno-finansowy wystarcza do ograniczenia CapEx. &
 Niewspierane &
-Dla \(\lambda = 0\) deficyt i dług rosną, ale adopcja AI/hybrid oraz inwestycje prywatne pozostają blisko baseline. Sam impuls fiskalny nie tworzy więc odwróconego U. \\
+Dla \(\lambda = 0\) deficyt i dług rosną, ale adopcja AI/hybrid oraz inwestycje prywatne pozostają blisko wariantu bez BDP. Sam impuls fiskalny nie tworzy więc odwróconego U. \\
 \addlinespace
 Interakcja kanału płacowo-rezerwowego i fiskalno-finansowego ogranicza zdolność firm do finansowania CapEx. &
 Wspierane &
@@ -74,7 +74,7 @@ Trzecie ograniczenie dotyczy sektora publicznego. Model zawiera reguły fiskalne
 
 Czwarte ograniczenie dotyczy zachowań firm. Firmy w \amor{} reagują na koszty, popyt, finansowanie i ograniczenia bilansowe, ale model nie opisuje pełnej strategii konkurencyjnej, jakości zarządzania, przewag organizacyjnych, zdolności wdrożeniowej ani różnic w kulturze innowacji. Dwie firmy z identycznym kosztem kapitału mogą w praktyce podjąć różne decyzje technologiczne, jeśli różnią się kompetencjami operacyjnymi.
 
-Piąte ograniczenie dotyczy liczby seedów i horyzontu. Eksperyment centralny wykorzystuje 10 seedów na poziom BDP i horyzont 60 miesięcy. Taki zakres pozwala raportować średnie, odchylenia standardowe i parowane przedziały ufności dla głównych kontrfaktów, ale nie zastępuje dużego programu badawczego obejmującego dziesiątki wariantów finansowania, parametrów behawioralnych i szoków zewnętrznych.
+Piąte ograniczenie dotyczy liczby ziaren losowania i horyzontu. Eksperyment centralny wykorzystuje 10 ziaren losowania na poziom BDP i horyzont 60 miesięcy. Taki zakres pozwala raportować średnie, odchylenia standardowe i parowane przedziały ufności dla głównych kontrfaktów, ale nie zastępuje dużego programu badawczego obejmującego dziesiątki wariantów finansowania, parametrów behawioralnych i szoków zewnętrznych.
 
 \subsection{Dalsza praca}
 

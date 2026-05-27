@@ -3,17 +3,17 @@
 \scriptsize
 \caption{Skala polskiego wariantu MFW względem siatki eksperymentu \amor{}}
 \label{tab:mfw-scale-bridge}
-\begin{tabularx}{\textwidth}{@{}p{0.22\textwidth}rrrX@{}}
+\begin{tabularx}{\textwidth}{@{}p{0.20\textwidth}rrrX@{}}
 \toprule
-Pozycja & Ekwiwalent per capita & Koszt w źródle & Koszt w modelu & Interpretacja \\
- & PLN/os./mies. & \% PKB & \% PKB baseline m60 & \\
+Pozycja & Ekwiwalent per capita & Koszt wg źródła & Koszt porównawczy & Interpretacja \\
+ & PLN/os./mies. & \% PKB źródła & \% PKB bez BDP, m60 & \\
 \midrule
-MFW, Polska, ceny 2013 & 176 & 4,9 & -- & nominalna kwota z aneksu MFW: 2 111 PLN/os./rok; historyczny mianownik PKB 2013 \\
-MFW, Polska, ceny 2025 & 273 & 3,2 & 2,32 & indeksacja CPI, populacja 38 mln i nominalny PKB 2025 z Article IV MFW w kolumnie źródłowej; kolumna modelowa używa PKB baseline m60 \\
-\texttt{--bdp 500} & 283 & -- & 2,40 & najniższy dodatni poziom sweepa \amor{}; blisko kotwicy per capita po indeksacji CPI \\
-\texttt{--bdp 1000} & 565 & -- & 4,80 & blisko oryginalnej kotwicy fiskalnej MFW z roku kalibracji 2013 \\
-\texttt{--bdp 2000} & 1 130 & -- & 9,59 & lokalny szczyt adopcji AI/hybrid w wariancie centralnym \\
-\texttt{--bdp 3000} & 1 700 & -- & 14,42 & wysoki impuls fiskalno-finansowy \\
+MFW, Polska, ceny 2013 & 176 & 4,9 & -- & kwota MFW: 2 111 PLN/os./rok; mianownik PKB 2013 \\
+MFW, Polska, ceny 2025 & 273 & 3,2 & 2,32 & kwota MFW po CPI; kolumna 4 to tylko wspólny mianownik modelu \\
+BDP 500 PLN & 283 & -- & 2,40 & poziom siatki najbliższy MFW po CPI \\
+BDP 1000 PLN & 565 & -- & 4,80 & blisko historycznej kotwicy 4,9\% PKB MFW \\
+BDP 2000 PLN & 1 130 & -- & 9,59 & lokalny szczyt adopcji AI/hybrid w wariancie centralnym \\
+BDP 3000 PLN & 1 700 & -- & 14,42 & wysoki impuls fiskalno-finansowy \\
 \bottomrule
 \end{tabularx}
 \end{table}

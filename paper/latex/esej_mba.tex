@@ -69,14 +69,14 @@
 \title{BDP jako warunkowy katalizator automatyzacji:\\
 od równowagi DSGE do wykonywalnego modelu SFC-ABM gospodarki polskiej}
 \author{Mateusz Maciaszek\\MBA - Ekonomia Menedżerska}
-\date{Wersja robocza, \today}
+\date{\today}
 
 \begin{document}
 
 \maketitle
 
 \begin{abstract}
-Niniejsza praca analizuje Bezwarunkowy Dochód Podstawowy nie tylko jako instrument redystrybucyjny, lecz jako potencjalny szok menedżerski wpływający na koszt pracy, koszt kapitału, popyt, bilanse firm oraz decyzje o automatyzacji. Punktem odniesienia jest raport Międzynarodowego Funduszu Walutowego \textit{Fiscal Monitor: Tackling Inequality} z 2017 r., który ujmuje BDP w modelu DSGE dla Stanów Zjednoczonych oraz w analizie statycznej dla Polski opartej na danych LIS 2013. Praca argumentuje, że pytanie menedżerskie dotyczy nie tylko nowej równowagi, lecz przede wszystkim ścieżki przejścia: czy firmy mają płynność, marże, kredyt i warunki popytowe, aby sfinansować reakcję technologiczną. Wykorzystano w tym celu \amor{}, wykonywalny model stock-flow consistent agent-based polskiej gospodarki. Eksperyment dotyczy deficytowo finansowanego BDP w horyzoncie 60 miesięcy i 10 seedów. W wariancie centralnym \(\lambda = 0{,}5\) BDP nie działa jako liniowy akcelerator automatyzacji. Efekt jest warunkowy: adopcja AI/hybrid rośnie do okolic scenariusza \texttt{--bdp 2000}, po czym spada, gdy interakcja kanału płacowo-rezerwowego i fiskalno-finansowego zaczyna ograniczać zdolność inwestycyjną sektora prywatnego. Warianty finansowania przez podatki lub cięcia wydatków nie są przedmiotem tego eksperymentu i mogą zmienić wielkość oraz kierunek efektu.
+Niniejsza praca analizuje Bezwarunkowy Dochód Podstawowy nie tylko jako instrument redystrybucyjny, lecz jako potencjalny szok menedżerski wpływający na koszt pracy, koszt kapitału, popyt, bilanse firm oraz decyzje o automatyzacji. Punktem odniesienia jest raport Międzynarodowego Funduszu Walutowego \textit{Fiscal Monitor: Tackling Inequality} z 2017 r., który ujmuje BDP w modelu DSGE dla Stanów Zjednoczonych oraz w analizie statycznej dla Polski opartej na danych LIS 2013. Praca argumentuje, że pytanie menedżerskie dotyczy nie tylko nowej równowagi, lecz przede wszystkim ścieżki przejścia: czy firmy mają płynność, marże, kredyt i warunki popytowe, aby sfinansować reakcję technologiczną. Wykorzystano w tym celu \amor{}, wykonywalny model stock-flow consistent agent-based polskiej gospodarki. Eksperyment dotyczy deficytowo finansowanego BDP w horyzoncie 60 miesięcy i 10 ziaren losowania. W wariancie centralnym \(\lambda = 0{,}5\) (gdzie \(\lambda\) oznacza udział transferu, który podnosi płacę rezerwową) BDP nie działa jako liniowy akcelerator automatyzacji. Efekt jest warunkowy: adopcja AI/hybrid rośnie do okolic scenariusza BDP 2000 PLN, po czym spada, gdy interakcja kanału płacowo-rezerwowego i fiskalno-finansowego zaczyna ograniczać zdolność inwestycyjną sektora prywatnego. Warianty finansowania przez podatki lub cięcia wydatków nie są przedmiotem tego eksperymentu i mogą zmienić wielkość oraz kierunek efektu.
 
 \medskip
 \noindent\textbf{Słowa kluczowe:} Bezwarunkowy Dochód Podstawowy, BDP, UBI, SFC-ABM, modele agentowe, DSGE, automatyzacja, koszt kapitału, płaca rezerwowa, polityka pieniężna, gospodarka polska, ekonomia złożoności.
@@ -85,9 +85,9 @@ Niniejsza praca analizuje Bezwarunkowy Dochód Podstawowy nie tylko jako instrum
 \noindent\textbf{Kody JEL:} C63, D31, E17, E24, E52, H24, H53, O33.
 
 \medskip
-\noindent\textbf{Kod i dane:} silnik modelu \amor{}; artefakty pracy, dane Monte Carlo i patch BDP w repozytorium \paperrepo{}.
+\noindent\textbf{Kod i dane:} silnik modelu \amor{}; artefakty pracy, dane Monte Carlo i plik zmian scenariusza BDP w repozytorium \paperrepo{}.
 \newline
-\noindent Base commit \amor{}: \path{2d8b46e5064abef9d7a054317028843837b6e1c4}; patch: \path{patches/amor-fati-bdp-scenario.patch}; dane: \path{mc/}.
+{\footnotesize\noindent Commit bazowy \amor{}: \path{2d8b46e5064abef9d7a054317028843837b6e1c4}; plik zmian: \path{patches/amor-fati-bdp-scenario.patch}; dane: \path{mc/}.\par}
 \end{abstract}
 
 \clearpage

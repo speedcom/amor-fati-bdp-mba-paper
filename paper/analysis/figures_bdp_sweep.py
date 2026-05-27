@@ -271,12 +271,12 @@ def write_terminal_latex_tables(summary: list[dict[str, float]]) -> None:
         r"\begin{table}[H]",
         r"\centering",
         r"\scriptsize",
-        r"\caption{Wariant centralny: metryki firmowe i rynku pracy po 10 seedach}",
+        r"\caption{Wariant centralny: metryki firmowe i rynku pracy po 10 ziarnach losowania}",
         r"\label{tab:terminal-results-real}",
         r"\begin{tabular}{@{}rccc@{}}",
         r"\toprule",
         r"BDP & AI/hybrid & Inwestycje/PKB & Bezrobocie \\",
-        r"PLN/mies. & \multicolumn{3}{c}{średnia \(\pm\) odchylenie standardowe między seedami, \%} \\",
+        r"PLN/mies. & \multicolumn{3}{c}{średnia \(\pm\) odch. std. między ziarnami, \%} \\",
         r"\midrule",
     ]
     for row in summary:
@@ -295,12 +295,12 @@ def write_terminal_latex_tables(summary: list[dict[str, float]]) -> None:
             r"\begin{table}[H]",
             r"\centering",
             r"\scriptsize",
-            r"\caption{Wariant centralny: metryki makro-fiskalne po 10 seedach}",
+            r"\caption{Wariant centralny: metryki makro-fiskalne po 10 ziarnach losowania}",
             r"\label{tab:terminal-results-macro}",
             r"\begin{tabular}{@{}rcccc@{}}",
             r"\toprule",
             r"BDP & Inflacja & Stopa NBP & Dług/PKB & Deficyt/PKB \\",
-            r"PLN/mies. & \multicolumn{4}{c}{średnia \(\pm\) odchylenie standardowe między seedami, \%} \\",
+            r"PLN/mies. & \multicolumn{4}{c}{średnia \(\pm\) odch. std. między ziarnami, \%} \\",
             r"\midrule",
         ]
     )
@@ -550,7 +550,7 @@ def plot_firm_transition_panel() -> None:
                 values,
                 color=LEVEL_COLORS[level],
                 linewidth=2.0,
-                label=f"BDP {level}",
+                label="bez BDP" if level == 0 else f"BDP {level} PLN",
             )
 
         ax.set_title(title)

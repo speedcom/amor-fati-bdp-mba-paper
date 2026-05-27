@@ -1,11 +1,11 @@
 \section{Inżynieria silnika \amor{}}
 \label{app:engineering}
 
-Ten aneks nie jest dodatkowym wynikiem ekonomicznym. Jego rola jest inna: pokazuje, jakiego rodzaju infrastruktura obliczeniowa stoi pod eksperymentem BDP. Ma to znaczenie dla oceny wiarygodności pracy, ponieważ wynik nie pochodzi z arkusza kalkulacyjnego ani z jednorazowego skryptu, lecz z produkcyjnego silnika SFC-ABM rozwijanego jako projekt open-source. W bieżącym checkout repozytorium \amor{} warstwa Scala obejmuje 358 plików w \path{src/main/scala} oraz \path{src/test/scala} i około 62 tys. linii kodu; z tego około 34 tys. linii przypada na kod silnika, a około 29 tys. na testy. Liczby te nie są argumentem z objętości, lecz wskazują skalę artefaktu, którego zachowanie jest następnie ograniczane przez typy, ledger, testy i dokumentację walidacyjną.
+Ten aneks nie jest dodatkowym wynikiem ekonomicznym. Jego rola jest inna: pokazuje, jakiego rodzaju infrastruktura obliczeniowa stoi pod eksperymentem BDP. Ma to znaczenie dla oceny wiarygodności pracy, ponieważ wynik nie pochodzi z arkusza kalkulacyjnego ani z jednorazowego skryptu, lecz z produkcyjnego silnika SFC-ABM rozwijanego jako projekt open-source. W bieżącej wersji repozytorium \amor{} warstwa Scala obejmuje 358 plików w \path{src/main/scala} oraz \path{src/test/scala} i około 62 tys. linii kodu; z tego około 34 tys. linii przypada na kod silnika, a około 29 tys. na testy. Liczby te nie są argumentem z objętości, lecz wskazują skalę artefaktu, którego zachowanie jest następnie ograniczane przez typy, ledger, testy i dokumentację walidacyjną.
 
 \subsection{Typy ekonomiczne i arytmetyka stałoprzecinkowa}
 
-Silnik nie operuje na bezpostaciowych liczbach zmiennoprzecinkowych. Podstawowe wielkości ekonomiczne są reprezentowane jako typy stałoprzecinkowe oparte na \texttt{Long} ze skalą \(10^4\). W kodzie występują m.in. typy \texttt{PLN}, \texttt{Rate}, \texttt{Share}, \texttt{Scalar}, \texttt{Multiplier}, \texttt{Coefficient}, \texttt{PriceIndex} i \texttt{ExchangeRate}. Są one zdefiniowane jako typy \texttt{opaque}, co oznacza, że kompilator Scali nie pozwala traktować ich jako tej samej liczby. Przykładowo dodanie kwoty pieniężnej do stopy procentowej nie jest błędem runtime, lecz błędem typów jeszcze przed uruchomieniem programu.
+Silnik nie operuje na bezpostaciowych liczbach zmiennoprzecinkowych. Podstawowe wielkości ekonomiczne są reprezentowane jako typy stałoprzecinkowe oparte na \texttt{Long} ze skalą \(10^4\). W kodzie występują m.in. typy \texttt{PLN}, \texttt{Rate}, \texttt{Share}, \texttt{Scalar}, \texttt{Multiplier}, \texttt{Coefficient}, \texttt{PriceIndex} i \texttt{ExchangeRate}. Są one zdefiniowane jako typy \texttt{opaque}, co oznacza, że kompilator Scali nie pozwala traktować ich jako tej samej liczby. Przykładowo dodanie kwoty pieniężnej do stopy procentowej nie jest błędem wykonania, lecz błędem typów jeszcze przed uruchomieniem programu.
 
 Ten wybór projektowy ma dwa skutki. Po pierwsze, ogranicza klasę błędów jednostek, które w modelach makroekonomicznych są szczególnie trudne do wykrycia po fakcie. Po drugie, unika dryfu numerycznego typowego dla arytmetyki \texttt{Double}, który mógłby maskować lub generować pozorne naruszenia identyczności SFC. Tam, gdzie operacje mogą przekroczyć zakres, stosowane są jawne kontrakty arytmetyczne, np. \texttt{multiplyExact}, \texttt{addExact}, sprawdzane dzielenie i wersje z przejściem przez \texttt{BigInt} w ścieżkach wymagających ochrony przed przepełnieniem.
 
@@ -34,7 +34,7 @@ Zgodność wykonania & model \texttt{Map[Int, Long]} jest powiązany z referencj
 \label{tab:ledger-verification}
 \end{table}
 
-Produkcja nie jest w tekście przedstawiana jako w pełni formalnie udowodniona. To byłoby zbyt mocne twierdzenie. Produkcyjny interpreter, szybka ścieżka imperatywna i dystrybucja są testowane przeciwko współdzielonym modelom referencyjnym oraz kontraktom wykonania. Łańcuch zaufania wygląda zatem następująco: Stainless/Z3 dowodzi własności modelu referencyjnego; testy mostkują model referencyjny z czystym interpreterem produkcyjnym; testy równoważności porównują ścieżkę imperatywną z referencją; runtime wymusza kontrakty kształtu batchy, indeksów, nieujemnych przepływów i zakresów \texttt{Long}. Jest to celowo konserwatywna architektura: dowód formalny ma jasno określone granice, a wszystko poza nimi jest objęte testami i kontraktami.
+Produkcja nie jest w tekście przedstawiana jako w pełni formalnie udowodniona. To byłoby zbyt mocne twierdzenie. Produkcyjny interpreter, szybka ścieżka imperatywna i dystrybucja są testowane przeciwko współdzielonym modelom referencyjnym oraz kontraktom wykonania. Łańcuch zaufania wygląda zatem następująco: Stainless/Z3 dowodzi własności modelu referencyjnego; testy mostkują model referencyjny z czystym interpreterem produkcyjnym; testy równoważności porównują ścieżkę imperatywną z referencją; warstwa wykonawcza wymusza kontrakty kształtu batchy, indeksów, nieujemnych przepływów i zakresów \texttt{Long}. Jest to celowo konserwatywna architektura: dowód formalny ma jasno określone granice, a wszystko poza nimi jest objęte testami i kontraktami.
 
 \subsection{Warstwa agentów i mechanizmy gospodarki}
 
@@ -48,7 +48,7 @@ Ta architektura jest ważna dla interpretacji BDP. Jeżeli transfer zmienia pła
 
 \subsection{Powierzchnie walidacji oraz źródła i status kalibracji}
 
-\amor{} rozdziela co najmniej trzy powierzchnie kontroli. Pierwsza to walidacja księgowa: czy przepływy i zasoby zachowują identyczności SFC. Druga to artefakty macierzy SFC: Balance Sheet Matrix, Transactions Flow Matrix, stock-flow reconciliation oraz mapping z wierszy symbolicznych do mechanizmów runtime. Trzecia to walidacja empiryczna i kalibracyjna: czy wartości startowe, parametry i ścieżki modelu mają jawne źródła, statusy i ograniczenia.
+\amor{} rozdziela co najmniej trzy powierzchnie kontroli. Pierwsza to walidacja księgowa: czy przepływy i zasoby zachowują identyczności SFC. Druga to artefakty macierzy SFC: Balance Sheet Matrix, Transactions Flow Matrix, stock-flow reconciliation oraz mapowanie wierszy symbolicznych do mechanizmów wykonania modelu. Trzecia to walidacja empiryczna i kalibracyjna: czy wartości startowe, parametry i ścieżki modelu mają jawne źródła, statusy i ograniczenia.
 
 Rejestr kalibracji \path{docs/calibration-register.md} jest generowany z typowanego rejestru źródeł i statusów parametrów. Nie jest listą luźnych przypisów, lecz tabelą parametrów z wartością, jednostką, właścicielem implementacyjnym, źródłem, transformacją i statusem. W bieżącej wersji rejestr wskazuje następujące liczby statusów:
 
@@ -69,16 +69,16 @@ Rejestr kalibracji \path{docs/calibration-register.md} jest generowany z typowan
 \texttt{UNKNOWN\_SOURCE} & 0 \\
 \bottomrule
 \end{tabular}
-\caption{Źródła i status kalibracji w produkcyjnym baseline \amor{} według rejestru kalibracji.}
+\caption{Źródła i status kalibracji w produkcyjnym punkcie bazowym \amor{} według rejestru kalibracji.}
 \label{tab:calibration-provenance}
 \end{table}
 
-Takie oznaczenia są istotne metodologicznie. Model nie ukrywa, które parametry są empiryczne, które są transformacją danych instytucjonalnych, które są założeniem strukturalnym, a które są współczynnikami dostrojonymi i wymagającymi dalszej walidacji. To wzmacnia falsyfikowalność eksperymentu BDP: zewnętrzny badacz może nie tylko powtórzyć seedy, ale także wskazać, które parametry powinny być przedmiotem alternatywnej kalibracji lub analizy wrażliwości.
+Takie oznaczenia są istotne metodologicznie. Model nie ukrywa, które parametry są empiryczne, które są transformacją danych instytucjonalnych, które są założeniem strukturalnym, a które są współczynnikami dostrojonymi i wymagającymi dalszej walidacji. To wzmacnia falsyfikowalność eksperymentu BDP: zewnętrzny badacz może nie tylko powtórzyć ziarna losowania, ale także wskazać, które parametry powinny być przedmiotem alternatywnej kalibracji lub analizy wrażliwości.
 
 \subsection{Koszt obliczeniowy i replikowalność}
 
-Wydajność nie jest w tej pracy osobnym wynikiem naukowym, lecz warunkiem praktycznej replikowalności. Istotne jest to, że eksperyment BDP nie wymaga klastra ani wielodniowej kolejki obliczeniowej: przebiegi użyte do przygotowania wyników mają koszt rzędu minut na lokalnej maszynie autora. Jednocześnie nie traktuję tego czasu jako porównywalnego benchmarku wobec innych modeli SFC-ABM, ponieważ zależy on od liczby agentów, horyzontu, liczby seedów, zapisu artefaktów, implementacji wejścia-wyjścia, wersji JVM i sprzętu.
+Wydajność nie jest w tej pracy osobnym wynikiem naukowym, lecz warunkiem praktycznej replikowalności. Istotne jest to, że eksperyment BDP nie wymaga klastra ani wielodniowej kolejki obliczeniowej: przebiegi użyte do przygotowania wyników mają koszt rzędu minut na lokalnej maszynie autora. Jednocześnie nie traktuję tego czasu jako porównywalnego benchmarku wobec innych modeli SFC-ABM, ponieważ zależy on od liczby agentów, horyzontu, liczby ziaren losowania, zapisu artefaktów, implementacji wejścia-wyjścia, wersji JVM i sprzętu.
 
 Część tej własności wynika z architektury wykonawczej. Warstwa ledgerowa ma ścieżkę imperatywną opartą na tablicach \texttt{Array[Long]} grupowanych według pary sektor--aktywo, a batchowane przepływy ograniczają koszt alokacji i sprzyjają lokalności pamięci. Jest to data-oriented design podporządkowany powtarzalnemu wykonywaniu dużej liczby prostych przepływów księgowych, a nie abstrakcyjny interpreter oparty na słownikach dla każdej transakcji. Granica twierdzenia pozostaje jednak ważna: jest to cecha inżynieryjna wspierająca replikację i iteracyjne eksperymenty kontrfaktyczne, nie niezależny wynik benchmarkowy całego silnika.
 
-W tym sensie \amor{} jest nie tylko modelem ekonomicznym, ale także narzędziem do powtarzalnych eksperymentów kontrfaktycznych. Twierdzenie „BDP jest warunkowym katalizatorem automatyzacji” nie jest zakończeniem analizy. Jest wynikiem jednego jawnego patcha, jednej jawnej siatki parametrów i jednego zestawu seedów na tle większego silnika, którego kod można sklonować, zmodyfikować i uruchomić ponownie.
+W tym sensie \amor{} jest nie tylko modelem ekonomicznym, ale także narzędziem do powtarzalnych eksperymentów kontrfaktycznych. Twierdzenie „BDP jest warunkowym katalizatorem automatyzacji” nie jest zakończeniem analizy. Jest wynikiem jednego jawnego pliku zmian, jednej jawnej siatki parametrów i jednego zestawu ziaren losowania na tle większego silnika, którego kod można sklonować, zmodyfikować i uruchomić ponownie.

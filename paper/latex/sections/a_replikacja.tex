@@ -1,20 +1,20 @@
 \section{Aneks replikacyjny}
 
-Eksperyment BDP jest rozdzielony na dwa poziomy repozytoriów. Silnik modelu znajduje się w repozytorium \amor{}. Niniejsza praca, dane Monte Carlo, skrypty generowania wykresów oraz patch scenariusza BDP znajdują się w osobnym repozytorium pracy \paperrepo{}. Takie rozdzielenie ma ograniczyć mieszanie kontrfaktycznego eksperymentu MBA z bazowym modelem Polski.
+Eksperyment BDP jest rozdzielony na dwa poziomy repozytoriów. Silnik modelu znajduje się w repozytorium \amor{}. Niniejsza praca, dane Monte Carlo, skrypty generowania wykresów oraz plik zmian scenariusza BDP znajdują się w osobnym repozytorium pracy \paperrepo{}. Takie rozdzielenie ma ograniczyć mieszanie kontrfaktycznego eksperymentu MBA z bazowym modelem Polski.
 
-Punktem odniesienia dla patcha BDP jest commit z gałęzi \texttt{main} repozytorium \amor{}:
+Punktem odniesienia dla pliku zmian BDP jest commit z gałęzi \texttt{main} repozytorium \amor{}:
 
 \begin{verbatim}
 2d8b46e5064abef9d7a054317028843837b6e1c4
 \end{verbatim}
 
-Kontrfaktyczny mechanizm BDP jest zapisany jako patch:
+Kontrfaktyczny mechanizm BDP jest zapisany jako plik zmian:
 
 \begin{verbatim}
 patches/amor-fati-bdp-scenario.patch
 \end{verbatim}
 
-Patch został sprawdzony względem commita bazowego przez:
+Plik zmian został sprawdzony względem commita bazowego przez:
 
 \begin{verbatim}
 git apply --check patches/amor-fati-bdp-scenario.patch
@@ -29,12 +29,12 @@ target/scala-3.8.2/amor-fati.jar
 
 Sumy kontrolne SHA-256 dla surowych plików \path{mc/*.csv} oraz agregatów w \path{paper/latex/data/} zapisano w \path{paper/latex/data/checksums.txt}, co pozwala zweryfikować zgodność artefaktów wynikowych także bez rekompilacji silnika.
 
-Punktem odniesienia merytorycznego był produkcyjny baseline modelu, skalibrowany do snapshotu gospodarki Polski na dzień 2026-04-30. Zakres i status tej powierzchni baseline są udokumentowane w następujących artefaktach repozytorium \amor{}:
+Punktem odniesienia merytorycznego był produkcyjny punkt bazowy modelu, skalibrowany do stanu gospodarki Polski na dzień 2026-04-30. Zakres i status tej powierzchni bazowej są udokumentowane w następujących artefaktach repozytorium \amor{}:
 
 \begin{itemize}
-    \item \path{docs/calibration-register.md} -- rejestr parametrów, jednostek, źródeł, transformacji i statusów kalibracji; wskazuje, że produkcyjne ustawienia baseline odnoszą się do snapshotu Polski z 2026-04-30.
-    \item \path{docs/scenario-registry.md} -- rejestr scenariuszy; definiuje scenariusz baseline jako punkt odniesienia dla kontrfaktów oraz wskazuje jego źródło i datę jako produkcyjny baseline Polski 2026-04-30.
-    \item \path{docs/empirical-validation-report.md} oraz \path{docs/empirical-validation/} -- raport i artefakty walidacyjne pokazujące, jak outputy modelu są porównywane z zewnętrznymi targetami empirycznymi.
+    \item \path{docs/calibration-register.md} -- rejestr parametrów, jednostek, źródeł, transformacji i statusów kalibracji; wskazuje, że produkcyjne ustawienia bazowe odnoszą się do stanu Polski z 2026-04-30.
+    \item \path{docs/scenario-registry.md} -- rejestr scenariuszy; definiuje scenariusz bazowy jako punkt odniesienia dla kontrfaktów oraz wskazuje jego źródło i datę jako produkcyjny punkt bazowy Polski 2026-04-30.
+    \item \path{docs/empirical-validation-report.md} oraz \path{docs/empirical-validation/} -- raport i artefakty walidacyjne pokazujące, jak wyniki modelu są porównywane z zewnętrznymi celami empirycznymi.
 \end{itemize}
 
 Minimalna ścieżka odtworzenia eksperymentu jest następująca:
@@ -49,7 +49,7 @@ sbt assembly
 ../amor-fati-bdp-mba-paper/scripts/run-lambda-sweep.sh
 \end{verbatim}
 
-Skrypt wariantu centralnego uruchamia poziomy \texttt{0}, \texttt{500}, \texttt{1000}, \texttt{1500}, \texttt{2000}, \texttt{2500} i \texttt{3000} PLN miesięcznie na agenta reprezentującego gospodarstwo domowe, dla 10 seedów i horyzontu 60 miesięcy. Domyślnie używa:
+Skrypt wariantu centralnego uruchamia poziomy \texttt{0}, \texttt{500}, \texttt{1000}, \texttt{1500}, \texttt{2000}, \texttt{2500} i \texttt{3000} PLN miesięcznie na agenta reprezentującego gospodarstwo domowe, dla 10 ziaren losowania i horyzontu 60 miesięcy. Domyślnie używa:
 
 \begin{verbatim}
 SEEDS=10
@@ -57,11 +57,11 @@ MONTHS=60
 JAR=target/scala-3.8.2/amor-fati.jar
 \end{verbatim}
 
-Argument \texttt{SEEDS=10} oznacza seedy \texttt{1}--\texttt{10}. Silnik Monte Carlo uruchamia je równolegle, ale każdy seed ma deterministyczną ścieżkę inicjalizacji i miesięcznych strumieni losowych. Porównania względem baseline są parowane po tym samym seedzie: seed \texttt{1} w scenariuszu \texttt{--bdp 2000} jest porównywany z seedem \texttt{1} w scenariuszu \texttt{--bdp 0}, itd.
+Argument \texttt{SEEDS=10} oznacza ziarna losowania \texttt{1}--\texttt{10}. Silnik Monte Carlo uruchamia je równolegle, ale każde ziarno ma deterministyczną ścieżkę inicjalizacji i miesięcznych strumieni losowych. Porównania względem wariantu bez BDP są parowane po tym samym ziarnie: ziarno \texttt{1} w scenariuszu \texttt{--bdp 2000} jest porównywane z ziarnem \texttt{1} w scenariuszu \texttt{--bdp 0}, itd.
 
-Analiza odporności kanału płacy rezerwowej wykorzystuje te same założenia horyzontu i liczby seedów, ale uruchamia siatkę \(\lambda = 0\), \(0{,}25\), \(0{,}5\), \(0{,}75\) i \(1\). Wariant baseline \(\texttt{--bdp 0}\) jest wspólny dla siatki.
+Analiza odporności kanału płacy rezerwowej wykorzystuje te same założenia horyzontu i liczby ziaren losowania, ale uruchamia siatkę \(\lambda = 0\), \(0{,}25\), \(0{,}5\), \(0{,}75\) i \(1\). Wariant bez BDP \(\texttt{--bdp 0}\) jest wspólny dla siatki.
 
-Pliki wynikowe zapisano w katalogu \path{mc/}. Dla każdego poziomu powstało dziesięć plików seed CSV oraz agregaty \path{hh}, \path{banks} i \path{firms}. Przykładowy wzorzec nazwy pliku:
+Pliki wynikowe zapisano w katalogu \path{mc/}. Dla każdego poziomu powstało dziesięć plików CSV dla poszczególnych ziaren losowania oraz agregaty \path{hh}, \path{banks} i \path{firms}. Przykładowy wzorzec nazwy pliku:
 
 \begin{verbatim}
 mc/robust-l050-bdp-2000_robust-l050-bdp-2000-60m-10s_60m_seed001.csv
@@ -74,7 +74,7 @@ paper/analysis/figures_bdp_sweep.py
 paper/analysis/figures_lambda_robustness.py
 \end{verbatim}
 
-Przedziały ufności w tabeli~\ref{tab:adoption-delta-ci} policzono metodą parowanego bootstrapu na różnicach względem baseline dla tych samych seedów: \(n = 10\), \(B = 10\,000\), seed procedury bootstrapowej \texttt{12345}.
+Przedziały ufności w tabeli~\ref{tab:adoption-delta-ci} policzono metodą parowanego bootstrapu na różnicach względem wariantu bez BDP dla tych samych ziaren losowania: \(n = 10\), \(B = 10\,000\), ziarno procedury bootstrapowej \texttt{12345}.
 
 Skrypty zapisują następujące artefakty:
 
