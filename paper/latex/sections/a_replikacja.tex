@@ -1,6 +1,6 @@
 \section{Aneks replikacyjny}
 
-Eksperyment BDP jest rozdzielony na dwa poziomy repozytoriów. Silnik modelu znajduje się w repozytorium \amor{}. Niniejsza praca, dane Monte Carlo, skrypty generowania wykresów oraz plik zmian scenariusza BDP znajdują się w osobnym repozytorium pracy \paperrepo{}. Takie rozdzielenie ma ograniczyć mieszanie kontrfaktycznego eksperymentu MBA z bazowym modelem Polski.
+Eksperyment BDP jest rozdzielony na dwa poziomy repozytoriów. Silnik modelu znajduje się w repozytorium \amor{}. Ta praca, dane Monte Carlo, skrypty generowania wykresów oraz plik zmian scenariusza BDP znajdują się w osobnym repozytorium pracy \paperrepo{}. Takie rozdzielenie ma ograniczyć mieszanie kontrfaktycznego eksperymentu MBA z bazowym modelem Polski.
 
 Punktem odniesienia dla pliku zmian BDP jest commit z gałęzi \texttt{main} repozytorium \amor{}:
 
@@ -29,7 +29,7 @@ target/scala-3.8.2/amor-fati.jar
 
 Sumy kontrolne SHA-256 dla surowych plików \path{mc/*.csv} oraz agregatów w \path{paper/latex/data/} zapisano w \path{paper/latex/data/checksums.txt}, co pozwala zweryfikować zgodność artefaktów wynikowych także bez rekompilacji silnika.
 
-Punktem odniesienia merytorycznego był produkcyjny punkt bazowy modelu, skalibrowany do stanu gospodarki Polski na dzień 2026-04-30. Zakres i status tej powierzchni bazowej są udokumentowane w następujących artefaktach repozytorium \amor{}:
+Punktem odniesienia merytorycznego był produkcyjny punkt bazowy modelu, skalibrowany do stanu gospodarki Polski na dzień 2026-04-30. Zakres i status tego punktu są udokumentowane w następujących artefaktach repozytorium \amor{}:
 
 \begin{itemize}
     \item \path{docs/calibration-register.md} -- rejestr parametrów, jednostek, źródeł, transformacji i statusów kalibracji; wskazuje, że produkcyjne ustawienia bazowe odnoszą się do stanu Polski z 2026-04-30.
