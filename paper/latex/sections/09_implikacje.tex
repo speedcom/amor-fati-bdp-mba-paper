@@ -1,10 +1,8 @@
 \section{Implikacje menedżerskie}
 
-Z perspektywy zarządu najważniejszy wniosek nie brzmi: \textit{BDP wymusza automatyzację}. Brzmi raczej: \textit{BDP zmienia warunki graniczne decyzji inwestycyjnej}. Program transferowy tej skali zmienia jednocześnie płace, popyt, koszt kapitału, kurs walutowy, dostępność kredytu i oczekiwaną rentowność projektów.
+Z perspektywy zarządu najważniejszy wniosek nie brzmi: \textit{BDP wymusza automatyzację}. Brzmi raczej: \textit{BDP zmienia warunki graniczne decyzji inwestycyjnej}. Program tej skali zmienia jednocześnie płace, popyt, koszt kapitału, kurs walutowy, dostępność kredytu i oczekiwaną rentowność projektów.
 
-Reakcją firmy nie powinno być więc hasło „automatyzować szybciej”. Wynik eksperymentu pokazuje, że umiarkowany BDP może sprzyjać adopcji AI/hybrid, ale przy wysokim transferze presja płacowo-rezerwowa spotyka się z pogorszeniem warunków fiskalno-finansowych. Automatyzacja pozostaje decyzją CapEx: wymaga gotówki, zdolności kredytowej, stabilnego finansowania, kontroli ryzyka kursowego i czasu na wdrożenie.
-
-Granica interpretacji jest ważna. Wprost z modelu wynikają przede wszystkim wnioski o koszcie kapitału, inwestycjach prywatnych, długu, deficycie, kursie i adopcji AI/hybrid. Zalecenia dotyczące portfela projektów, zatrudnienia i FX są menedżerskim przełożeniem tych kanałów, a nie dodatkowymi zmiennymi estymowanymi przez model.
+Reakcją firmy nie powinno być więc hasło „automatyzować szybciej”. Wynik eksperymentu pokazuje, że umiarkowany BDP może sprzyjać adopcji AI/hybrid, ale przy wysokim transferze presja płacowo-rezerwowa spotyka się z pogorszeniem warunków fiskalno-finansowych. Automatyzacja pozostaje decyzją inwestycyjną: wymaga gotówki, zdolności kredytowej, stabilnego finansowania, kontroli ryzyka kursowego i czasu na wdrożenie. Tabela~\ref{tab:managerial-decision-matrix} przekłada te kanały na decyzje zarządcze; nie dodaje nowych zmiennych estymowanych przez model.
 
 \begin{table}[H]
 \centering
@@ -15,10 +13,10 @@ Granica interpretacji jest ważna. Wprost z modelu wynikają przede wszystkim wn
 \toprule
 \textbf{Decyzja zarządcza} & \textbf{Kanał ryzyka} & \textbf{Metryki do monitorowania} & \textbf{Rekomendowana reakcja} \\
 \midrule
-CapEx teraz czy odroczenie inwestycji &
+Nakłady teraz czy odroczenie inwestycji &
 BDP zwiększa presję automatyzacyjną, ale przy wysokim transferze rośnie koszt kapitału i słabnie ścieżka inwestycji prywatnych. &
 Inwestycje prywatne/PKB, koszt długu korporacyjnego, rentowność obligacji, dług/PKB, deficyt/PKB &
-Testować projekty w scenariuszach kosztu kapitału. Przy umiarkowanym BDP przyspieszać projekty o krótkim paybacku; przy wysokim BDP chronić płynność i selektywność CapEx. \\
+Testować projekty w scenariuszach kosztu kapitału. Przy umiarkowanym BDP przyspieszać projekty o krótkim czasie zwrotu; przy wysokim BDP chronić płynność i selektywność nakładów inwestycyjnych. \\
 \addlinespace
 Automatyzacja selektywna czy pełna &
 Presja płacowa nie działa równomiernie na procesy, a finansowanie technologii staje się ograniczeniem. &
@@ -27,8 +25,8 @@ Priorytetyzować procesy pracochłonne, powtarzalne i szybkie we wdrożeniu. Tra
 \addlinespace
 Struktura zatrudnienia i wynagrodzeń &
 BDP może podnosić płacę rezerwową, ale nie musi natychmiast podnosić płacy rynkowej. &
-Płaca rynkowa, płaca zatrudnionych, bezrobocie, płaca rezerwowa, konsumpcja HH &
-Mapować stanowiska według podatności na automatyzację, wartości relacyjnej i kosztu utraty kompetencji. Łączyć automatyzację z retencją ról krytycznych i reskillingiem. \\
+Płaca rynkowa, płaca zatrudnionych, bezrobocie, płaca rezerwowa, konsumpcja gospodarstw &
+Mapować stanowiska według podatności na automatyzację, relacyjnej wartości stanowiska i kosztu utraty kompetencji. Łączyć automatyzację z retencją ról krytycznych i przekwalifikowaniem. \\
 \addlinespace
 Finansowanie długiem czy środkami własnymi &
 Wysoki BDP zwiększa deficyt i dług publiczny, co może podnosić koszt finansowania rynkowego i ograniczać apetyt banków na ryzyko. &
@@ -45,24 +43,12 @@ Traktować FX jako część uzasadnienia inwestycyjnego. Zabezpieczać ekspozycj
 
 \subsection{Priorytety decyzji}
 
-Pierwszy priorytet to dyscyplina CapEx. Firma nie powinna pytać wyłącznie, czy projekt obniży koszt jednostkowy pracy. Powinna pytać, czy zachowuje dodatnią wartość przy wyższym koszcie długu, słabszym PLN, droższej technologii importowanej i słabszej dostępności finansowania. W przedziale umiarkowanego BDP racjonalne może być przyspieszenie projektów o krótkim czasie zwrotu. Przy wysokim BDP większą wartość ma ochrona bilansu: mniej projektów, mniejszy jednorazowy CapEx, większy udział projektów modułowych i większy bufor gotówkowy.
+Dyscyplina inwestycyjna staje się pierwszym filtrem. Firma nie powinna pytać wyłącznie, czy projekt obniży koszt jednostkowy pracy, lecz czy pozostaje opłacalny przy wyższym koszcie długu, słabszym PLN, droższej technologii importowanej i słabszej dostępności finansowania. W przedziale umiarkowanego BDP racjonalne może być przyspieszenie projektów o krótkim czasie zwrotu. Przy wysokim BDP większą wartość ma ochrona bilansu: mniej projektów, mniejsze jednorazowe nakłady, większy udział projektów modułowych i większy bufor gotówkowy.
 
-Praktycznie oznacza to zmianę kryterium kwalifikacji projektów. Projekt automatyzacyjny powinien przejść osobno test zwrotu operacyjnego, test finansowania i test ryzyka wdrożenia. Inwestycja atrakcyjna przy stabilnym WACC może przestać być akceptowalna, jeśli wymaga długu refinansowanego w okresie wzrostu rentowności albo dużych płatności walutowych.
+Automatyzacja powinna być selektywna. Wynik modelu nie wspiera strategii „automatyzować wszystko”. Jeżeli koszt kapitału rośnie razem z kosztem pracy, pierwszeństwo mają procesy powtarzalne, pracochłonne, szybkie we wdrożeniu i odporne na niepewność popytu. Dotyczy to zwłaszcza automatyzacji zaplecza administracyjnego, kontroli jakości, planowania zapasów, obsługi wyjątków i predykcyjnego utrzymania ruchu. W zatrudnieniu oznacza to mapowanie ról rutynowych, relacyjnych i krytycznych operacyjnie, a nie prostą redukcję etatów.
 
-Drugi priorytet to automatyzacja selektywna. Wynik modelu nie wspiera strategii „automatyzować wszystko”. Jeżeli koszt kapitału rośnie razem z kosztem pracy, wygrywają projekty o dużej powtarzalności, wysokim udziale pracy w koszcie, niskiej niepewności popytu i szybkim efekcie na marży. Rola zarządu przesuwa się z pytania „czy wdrożyć AI” na pytanie „gdzie AI ma największą odporność bilansową”.
-
-To sprzyja mniejszym projektom o krótkim czasie zwrotu: automatyzacji back-office, kontroli jakości, planowania zapasów, obsługi wyjątków albo predykcyjnego utrzymania ruchu. Duże programy transformacyjne pozostają możliwe, ale wymagają etapowania i punktów decyzyjnych, w których zarząd może zatrzymać projekt bez utraty całości nakładów.
-
-Trzeci priorytet to zarządzanie zatrudnieniem bez reakcji panicznej. Kanał płacy rezerwowej jest aktywny, ale w modelu płaca rynkowa reaguje wyraźniej dopiero przy wyższych poziomach BDP. Firma powinna więc rozdzielić role rutynowe, relacyjne i krytyczne operacyjnie. Odpowiedzią nie musi być prosta redukcja etatów; może nią być zmiana struktury pracy: mniej czynności rutynowych, więcej nadzoru nad procesami, obsługi wyjątków, utrzymania automatyzacji i reskillingu.
-
-Czwarty priorytet to finansowanie i FX. Wysoki BDP nie musi wywołać natychmiastowego kryzysu bankowego, aby ograniczyć inwestycje. Wystarczy, że rosną koszt długu, wymogi zabezpieczeń, ryzyko refinansowania i koszt importowanej technologii. Dlatego ekspozycja walutowa powinna wejść do uzasadnienia inwestycyjnego od pierwszego dnia: waluta kontraktu, harmonogram płatności, udział komponentów importowanych, serwis, licencje i ryzyko długu walutowego.
-
-Najbardziej podatne są firmy o niskiej marży, wysokiej dźwigni i dużym udziale importowanych komponentów technologicznych. Dla nich BDP może jednocześnie zwiększyć presję kosztu pracy i podnieść cenę kapitału. Jeżeli bilans nie ma bufora, bodziec do automatyzacji nie zamienia się w inwestycję, tylko w presję na marżę.
+Finansowanie i FX powinny wejść do uzasadnienia inwestycyjnego od pierwszego dnia. Wysoki BDP nie musi wywołać kryzysu bankowego, aby ograniczyć inwestycje; wystarczy wzrost kosztu długu, wymogów zabezpieczeń, ryzyka refinansowania i kosztu importowanej technologii. Najbardziej podatne są firmy o niskiej marży, wysokiej dźwigni i dużym udziale importowanych komponentów. Dla nich bodziec do automatyzacji nie zamienia się w inwestycję, jeżeli wcześniej nie zabezpieczono płynności, linii kredytowych, harmonogramu płatności i ekspozycji walutowej.
 
 \subsection{Konkluzja dla zarządu}
 
-BDP należy traktować jako szok strategiczny dla bilansu firmy. Nie jest to wyłącznie program społeczny ani prosty impuls popytowy. Jest to zmiana układu cen względnych i warunków finansowania: pracy, kapitału, długu, waluty, importu i ryzyka fiskalnego.
-
-Najlepsza reakcja zarządu nie polega na maksymalizacji tempa automatyzacji, lecz na utrzymaniu zdolności do sfinansowania właściwych projektów w odpowiednim momencie. W przedziale umiarkowanego BDP przewagę może dać szybka, selektywna automatyzacja procesów o wysokim zwrocie. W przedziale wysokiego BDP przewagę może dać odporność bilansu: płynność, kontrola dźwigni, zabezpieczenie kursowe i dyscyplina CapEx.
-
-Praktyczna kolejność decyzji jest więc następująca. Najpierw trzeba ustalić, które procesy naprawdę tworzą ekspozycję na presję płacową. Następnie sprawdzić, czy projekt automatyzacji ma finansowanie odporne na wyższy koszt długu i słabszy PLN. Dopiero na końcu warto rozstrzygać skalę wdrożenia technologii. W scenariuszu BDP przewagę ma nie firma, która najszybciej ogłasza automatyzację, lecz firma, która najdłużej zachowuje zdolność finansowania dobrych projektów.
+BDP należy traktować jako szok strategiczny dla bilansu firmy: zmianę cen względnych pracy, kapitału, długu, waluty, importu i ryzyka fiskalnego. Najlepsza reakcja zarządu nie polega na maksymalizacji tempa automatyzacji, lecz na utrzymaniu zdolności do sfinansowania właściwych projektów w odpowiednim momencie. Praktyczna kolejność decyzji jest prosta: najpierw ustalić ekspozycję procesów na presję płacową, potem odporność finansowania na wyższy koszt długu i słabszy PLN, a dopiero na końcu skalę wdrożenia technologii.

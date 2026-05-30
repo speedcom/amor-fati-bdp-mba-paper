@@ -6,17 +6,18 @@ Transfer jest traktowany jako wydatek społeczny sektora publicznego. Dlatego od
 
 Formuła transferu gospodarstwa domowego ma postać:
 \begin{equation}
-  Transfer_h = Children_h \cdot 800 + BDP.
+  \mathrm{Transfer}_h = \mathrm{Children}_h \cdot 800 + BDP.
 \end{equation}
+
 Kanał płacy rezerwowej zapisano jako:
 \begin{equation}
-  ReservationWage = MinWage + \lambda \cdot BDP.
+  \mathrm{ReservationWage} = \mathrm{MinWage} + \lambda \cdot BDP.
 \end{equation}
 W wariancie centralnym przyjęto \(\lambda = 0{,}5\). Jest to założenie behawioralne: gospodarstwo domowe otrzymuje pełny BDP, ale tylko część transferu podnosi jego płacę rezerwową. Dla BDP równego zero model pozostaje wariantem bazowym bez dodatkowego transferu. W analizie odporności siła kanału płacy rezerwowej jest zmieniana dla \(\lambda = 0\), \(0{,}25\), \(0{,}5\), \(0{,}75\) i \(1\).
 
 Eksperyment objął poziomy \(0\), \(500\), \(1000\), \(1500\), \(2000\), \(2500\) i \(3000\) PLN miesięcznie na agenta reprezentującego gospodarstwo domowe. Horyzont wynosił 60 miesięcy, a każdy poziom uruchomiono dla 10 ziaren losowania. Szczegółowa ścieżka odtworzenia, commit bazowy, plik zmian i komendy znajdują się w aneksie replikacyjnym.
 
-Jednostka transferu wymaga doprecyzowania. Poziom BDP 2000 PLN nie oznacza literalnie 2000 PLN miesięcznie na każdego mieszkańca Polski. Oznacza miesięczny transfer na agenta reprezentującego gospodarstwo domowe w skalowanej populacji modelu. Dlatego przeliczenie na język decydenta publicznego powinno wykorzystywać dodatkowy miesięczny strumień transferów społecznych względem wariantu bez BDP, podzielony przez populację referencyjną 38 mln osób, a nie proste dzielenie liczby mieszkańców przez liczbę agentów.
+Jednostka transferu wymaga doprecyzowania. Poziom BDP 2000~PLN nie oznacza literalnie 2000 PLN miesięcznie na każdego mieszkańca Polski. Oznacza miesięczny transfer na agenta reprezentującego gospodarstwo domowe w skalowanej populacji modelu. Dlatego przeliczenie na język decydenta publicznego powinno wykorzystywać dodatkowy miesięczny strumień transferów społecznych względem wariantu bez BDP, podzielony przez populację referencyjną 38 mln osób, a nie proste dzielenie liczby mieszkańców przez liczbę agentów.
 
 Pełny zbiór wyników modelu jest szerszy niż zakres tej pracy. W analizie wykorzystuję tylko wskaźniki odpowiadające kanałom hipotezy: skalę transferu, deficyt i dług, koszt kapitału, kurs i rachunek bieżący, inwestycje prywatne, adopcję AI/hybrid, demografię firm oraz kontrolnie wybrane miary gospodarstw domowych i sektora bankowego.
 
